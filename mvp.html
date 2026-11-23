@@ -272,10 +272,10 @@
               <span id="headerLangLabel">EN</span>
             </button>
 
-            <!-- Full-Page Admin Panel Button -->
+            <!-- Full-Page Admin Panel Button (Hidden on Mobile/Tablet, visible on Desktop) -->
             <button
               onclick="navigateTo('admin')"
-              class="relative flex items-center gap-1.5 px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-xl bg-lavender-soft hover:bg-plum hover:text-white text-plum font-extrabold text-xs sm:text-sm transition-all border border-plum/15"
+              class="relative hidden lg:flex items-center gap-1.5 px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-xl bg-lavender-soft hover:bg-plum hover:text-white text-plum font-extrabold text-xs sm:text-sm transition-all border border-plum/15"
             >
               <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
               <span id="navAdminLabel" class="hidden sm:inline">لوحة الإدارة</span>
@@ -1671,6 +1671,7 @@
           <button onclick="navigateTo('admin')" class="w-full py-2.5 rounded-xl bg-plum text-white font-extrabold text-xs flex items-center justify-center gap-2">
             <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
             <span>${t('navAdmin')}</span>
+            ${appState.orders.filter(o => o.status === 'new').length > 0 ? `<span class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[11px] font-extrabold rounded-full bg-magenta text-white">${appState.orders.filter(o => o.status === 'new').length}</span>` : ''}
           </button>
         </div>
       `;
