@@ -1,0 +1,3279 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>قوارير | Qwareer — متجر الميكب والبرفانات والعناية بالبشرة</title>
+
+  <!-- Google Fonts: Cairo (Arabic) & Plus Jakarta Sans (English) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Tailwind Brand Theme Configuration -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            plum: {
+              DEFAULT: '#6E2468',
+              dark: '#51164C',
+              light: '#893382',
+            },
+            magenta: {
+              DEFAULT: '#D22F7C',
+              dark: '#B02064',
+              light: '#EA569C',
+            },
+            lavender: {
+              DEFAULT: '#A672B1',
+              soft: '#F4EBF7',
+              border: '#E5D3EC',
+            },
+            canvas: '#FAF7FB',
+            ink: '#1F1624',
+          },
+          boxShadow: {
+            'card': '0 4px 20px -4px rgba(110, 36, 104, 0.08)',
+            'glow': '0 10px 25px -6px rgba(210, 47, 124, 0.38)',
+            'flyout': '0 16px 40px -10px rgba(31, 22, 36, 0.18)',
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* Dynamic Font Switching by Language */
+    html[lang="ar"] body {
+      font-family: 'Cairo', sans-serif;
+    }
+    html[lang="en"] body {
+      font-family: 'Plus Jakarta Sans', 'Cairo', sans-serif;
+    }
+
+    body {
+      background-color: #FAF7FB;
+      color: #1F1624;
+    }
+
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Animations */
+    @keyframes popIn {
+      0% { transform: scale(0.95); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .animate-pop {
+      animation: popIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes slideToast {
+      0% { transform: translateY(16px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+    .animate-toast {
+      animation: slideToast 0.26s ease-out forwards;
+    }
+
+    /* ========================================================================= */
+    /* NESTED CATEGORIES DROPDOWN + SIDE FLYOUT MENU (RTL & LTR AWARE)           */
+    /* ========================================================================= */
+    .cat-dropdown-panel {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+    }
+    .cat-dropdown-wrap.is-open > .cat-dropdown-panel,
+    .cat-dropdown-wrap:hover > .cat-dropdown-panel {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    [dir="rtl"] .cat-dropdown-panel {
+      right: 0;
+      left: auto;
+    }
+    [dir="ltr"] .cat-dropdown-panel {
+      left: 0;
+      right: auto;
+    }
+
+    .sub-flyout-panel {
+      opacity: 0;
+      visibility: hidden;
+      top: -6px;
+      transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s ease;
+    }
+    /* In RTL, side flyout opens to the LEFT of the main category dropdown */
+    [dir="rtl"] .sub-flyout-panel {
+      right: 100%;
+      left: auto;
+      padding-right: 8px;
+      transform: translateX(8px);
+    }
+    /* In LTR, side flyout opens to the RIGHT of the main category dropdown */
+    [dir="ltr"] .sub-flyout-panel {
+      left: 100%;
+      right: auto;
+      padding-left: 8px;
+      transform: translateX(-8px);
+    }
+
+    .main-cat-item:hover > .sub-flyout-panel,
+    .main-cat-item.flyout-open > .sub-flyout-panel {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+    }
+
+    /* Cart Drawer directional positioning */
+    [dir="rtl"] #cartPanel {
+      left: 0;
+      right: auto;
+    }
+    [dir="ltr"] #cartPanel {
+      right: 0;
+      left: auto;
+    }
+    [dir="rtl"] #cartPanel.cart-closed {
+      transform: translateX(-100%);
+    }
+    [dir="ltr"] #cartPanel.cart-closed {
+      transform: translateX(100%);
+    }
+
+    /* Mobile Nav Drawer directional positioning */
+    [dir="rtl"] #mobileNavPanel {
+      right: 0;
+      left: auto;
+    }
+    [dir="ltr"] #mobileNavPanel {
+      left: 0;
+      right: auto;
+    }
+    [dir="rtl"] #mobileNavPanel.drawer-closed {
+      transform: translateX(100%);
+    }
+    [dir="ltr"] #mobileNavPanel.drawer-closed {
+      transform: translateX(-100%);
+    }
+
+    /* Admin Sidebar directional positioning */
+    [dir="rtl"] #adminSidebar {
+      right: 0;
+      left: auto;
+    }
+    [dir="ltr"] #adminSidebar {
+      left: 0;
+      right: auto;
+    }
+    @media (max-width: 1023px) {
+      [dir="rtl"] #adminSidebar.sidebar-closed {
+        transform: translateX(100%);
+      }
+      [dir="ltr"] #adminSidebar.sidebar-closed {
+        transform: translateX(-100%);
+      }
+    }
+  </style>
+</head>
+<body class="bg-canvas text-ink antialiased selection:bg-magenta/20 selection:text-plum overflow-x-hidden">
+
+  <!-- ======================================================================= -->
+  <!-- VIEW 1: STOREFRONT SHELL (CONTAINS HOME PAGE & STORE PAGE)              -->
+  <!-- ======================================================================= -->
+  <div id="storefrontShell" class="min-h-screen flex flex-col">
+
+    <!-- ==================== STICKY TOP NAVIGATION BAR ==================== -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-plum/10 shadow-xs">
+      <!-- Top Promo Strip -->
+      <div class="bg-gradient-to-l from-plum via-[#8A2670] to-magenta text-white text-[11px] sm:text-xs font-bold py-1.5 px-4 text-center">
+        <span id="topPromoStrip"></span>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16 sm:h-20 gap-3">
+
+          <!-- Mobile Hamburger + Brand Logo -->
+          <div class="flex items-center gap-2.5 shrink-0">
+            <button
+              onclick="toggleMobileNav(true)"
+              class="lg:hidden p-2 rounded-xl bg-lavender-soft text-plum hover:bg-plum hover:text-white transition-colors"
+              aria-label="Menu"
+            >
+              <i data-lucide="menu" class="w-5 h-5"></i>
+            </button>
+
+            <button onclick="navigateTo('home')" class="flex items-center gap-2.5 group focus:outline-none">
+              <div class="w-10 h-10 sm:w-11 sm:h-11 transition-transform duration-300 group-hover:scale-105" id="headerLogoSlot"></div>
+              <div class="flex flex-col leading-tight text-start">
+                <span class="text-lg sm:text-xl font-black text-plum tracking-tight" id="brandNameMain">قوارير</span>
+                <span class="text-[10px] sm:text-[11px] font-extrabold tracking-widest text-magenta uppercase -mt-0.5" id="brandNameSub">Qwareer</span>
+              </div>
+            </button>
+          </div>
+
+          <!-- Desktop Center Navigation: Home | Categories (Dropdown + Side Flyout) | Store -->
+          <nav class="hidden lg:flex items-center gap-1.5" aria-label="Main Navigation">
+            <button
+              id="navLinkHome"
+              onclick="navigateTo('home')"
+              class="px-4 py-2.5 rounded-xl text-sm font-extrabold transition-all"
+            ></button>
+
+            <!-- Categories Dropdown Trigger with Nested Side Flyout -->
+            <div id="categoriesDropdownWrap" class="relative cat-dropdown-wrap">
+              <button
+                id="navCategoriesTrigger"
+                onclick="toggleCategoriesDropdown()"
+                class="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-extrabold text-ink/80 hover:text-plum hover:bg-lavender-soft/60 transition-all"
+              >
+                <i data-lucide="grid-2x2" class="w-4 h-4 text-magenta"></i>
+                <span id="navCategoriesLabel">الأقسام</span>
+                <i data-lucide="chevron-down" class="w-4 h-4 opacity-70"></i>
+              </button>
+
+              <!-- Dropdown Panel: Main Categories -> Hover/Click opens Side Flyout for Sub-Categories -->
+              <div class="cat-dropdown-panel absolute top-full pt-2 w-64 z-50">
+                <div id="nestedCategoriesMenu" class="bg-white rounded-2xl shadow-flyout border border-plum/15 p-2 space-y-1">
+                  <!-- Dynamically rendered with side flyouts -->
+                </div>
+              </div>
+            </div>
+
+            <button
+              id="navLinkStore"
+              onclick="navigateTo('store', 'all', 'all')"
+              class="px-4 py-2.5 rounded-xl text-sm font-extrabold transition-all"
+            ></button>
+          </nav>
+
+          <!-- Right/Left Utility Actions: Lang Switcher, Admin Panel, Cart -->
+          <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+            <!-- Language Toggle Button (EN / عربي) -->
+            <button
+              id="headerLangToggle"
+              onclick="toggleLanguage()"
+              class="flex items-center gap-1.5 px-3 py-2 sm:py-2.5 rounded-xl bg-canvas hover:bg-lavender-soft border border-plum/15 text-plum font-extrabold text-xs sm:text-sm transition-all"
+              title="Switch Language / تغيير اللغة"
+            >
+              <i data-lucide="globe" class="w-4 h-4 text-magenta"></i>
+              <span id="headerLangLabel">EN</span>
+            </button>
+
+            <!-- Full-Page Admin Panel Button -->
+            <button
+              onclick="navigateTo('admin')"
+              class="relative flex items-center gap-1.5 px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-xl bg-lavender-soft hover:bg-plum hover:text-white text-plum font-extrabold text-xs sm:text-sm transition-all border border-plum/15"
+            >
+              <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+              <span id="navAdminLabel" class="hidden sm:inline">لوحة الإدارة</span>
+              <span id="navAdminBadge" class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[11px] font-extrabold rounded-full bg-magenta text-white">0</span>
+            </button>
+
+            <!-- Cart Drawer Button -->
+            <button
+              onclick="toggleCartDrawer(true)"
+              class="relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-gradient-to-l from-plum to-magenta text-white font-extrabold text-xs sm:text-sm shadow-glow hover:opacity-95 active:scale-95 transition-all"
+            >
+              <i data-lucide="shopping-bag" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+              <span id="navCartLabel" class="hidden sm:inline">السلة</span>
+              <span id="navCartCount" class="inline-flex items-center justify-center min-w-[22px] h-[22px] px-1.5 text-xs font-extrabold rounded-full bg-white text-plum">0</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ==================== PAGE A: HOME PAGE ==================== -->
+    <main id="homePageView" class="flex-1">
+      <!-- Rendered dynamically in current language -->
+    </main>
+
+    <!-- ==================== PAGE B: STORE / SHOP PAGE ==================== -->
+    <main id="storePageView" class="hidden flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-9">
+      <!-- Rendered dynamically in current language -->
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer id="storeFooter" class="bg-white border-t border-plum/10 mt-12">
+      <!-- Rendered dynamically -->
+    </footer>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- VIEW 2: FULL-PAGE ADMIN PANEL (COMPLETELY REPLACES STOREFRONT)          -->
+  <!-- ======================================================================= -->
+  <div id="adminPageView" class="hidden min-h-screen bg-canvas flex">
+    <!-- Mobile Sidebar Backdrop -->
+    <div id="adminMobileBackdrop" onclick="toggleAdminMobileSidebar(false)" class="fixed inset-0 bg-ink/50 backdrop-blur-xs z-40 hidden lg:hidden"></div>
+
+    <!-- Persistent Admin Sidebar (Right in RTL, Left in LTR) -->
+    <aside id="adminSidebar" class="sidebar-closed fixed lg:sticky top-0 z-50 h-screen w-72 bg-ink text-white flex flex-col shrink-0 transition-transform duration-300 ease-out shadow-2xl">
+      <!-- Sidebar rendered dynamically -->
+    </aside>
+
+    <!-- Admin Main Workspace -->
+    <div class="flex-1 flex flex-col min-w-0">
+      <!-- Admin Top Bar -->
+      <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-plum/10 px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <button onclick="toggleAdminMobileSidebar(true)" class="lg:hidden p-2 rounded-xl bg-lavender-soft text-plum hover:bg-plum hover:text-white transition-colors">
+            <i data-lucide="menu" class="w-5 h-5"></i>
+          </button>
+          <div>
+            <h1 id="adminTopTitle" class="text-lg sm:text-xl font-black text-ink"></h1>
+            <p id="adminTopSubtitle" class="text-xs text-ink/55 hidden sm:block"></p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <!-- Language Toggle inside Admin -->
+          <button
+            onclick="toggleLanguage()"
+            class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-canvas hover:bg-lavender-soft border border-plum/15 text-plum font-extrabold text-xs sm:text-sm transition-all"
+          >
+            <i data-lucide="globe" class="w-4 h-4 text-magenta"></i>
+            <span id="adminLangLabel">EN</span>
+          </button>
+
+          <!-- Back to Store Button -->
+          <button
+            onclick="navigateTo('home')"
+            class="flex items-center gap-1.5 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-gradient-to-l from-plum to-magenta text-white font-extrabold text-xs sm:text-sm shadow-glow hover:opacity-95 transition-all"
+          >
+            <i data-lucide="store" class="w-4 h-4"></i>
+            <span id="adminBackToStoreLabel">العودة للمتجر</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Dynamic Admin Page Content -->
+      <main id="adminMainContent" class="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
+        <!-- Overview / Orders / Products / Categories -->
+      </main>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MOBILE NAVIGATION DRAWER (WITH NESTED CATEGORIES ACCORDION)             -->
+  <!-- ======================================================================= -->
+  <div id="mobileNavOverlay" class="fixed inset-0 z-50 hidden lg:hidden">
+    <div onclick="toggleMobileNav(false)" class="absolute inset-0 bg-ink/50 backdrop-blur-xs"></div>
+    <aside id="mobileNavPanel" class="drawer-closed absolute top-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl flex flex-col transition-transform duration-300 ease-out">
+      <!-- Dynamically rendered -->
+    </aside>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- SLIDE-OVER SHOPPING CART & CHECKOUT DRAWER                              -->
+  <!-- ======================================================================= -->
+  <div id="cartOverlay" class="fixed inset-0 z-50 hidden">
+    <div onclick="toggleCartDrawer(false)" class="absolute inset-0 bg-ink/50 backdrop-blur-xs"></div>
+    <aside id="cartPanel" class="cart-closed absolute top-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col transition-transform duration-300 ease-out">
+      <!-- Dynamically rendered -->
+    </aside>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- TOAST NOTIFICATION CONTAINER                                            -->
+  <!-- ======================================================================= -->
+  <div id="toastContainer" class="fixed bottom-5 inset-x-4 sm:inset-x-auto sm:end-5 z-50 flex flex-col gap-2 pointer-events-none items-center sm:items-end"></div>
+
+  <!-- ======================================================================= -->
+  <!-- APPLICATION JAVASCRIPT                                                  -->
+  <!-- ======================================================================= -->
+  <script>
+    /**
+     * =========================================================================
+     * 1. BILINGUAL I18N DICTIONARY (ARABIC RTL & ENGLISH LTR)
+     * =========================================================================
+     */
+    const I18N = {
+      ar: {
+        brandMain: 'قوارير',
+        brandSub: 'Qwareer',
+        langSwitch: 'EN',
+        currency: 'ج.م',
+        topPromo: '✨ منتجات أصلية 100% • توصيل مجاني للطلبات فوق 1,000 ج.م • الدفع كاش عند الاستلام (COD)',
+
+        // Navigation
+        navHome: 'الرئيسية',
+        navCategories: 'الأقسام',
+        navStore: 'المتجر',
+        navAdmin: 'لوحة الإدارة',
+        navCart: 'السلة',
+        viewAllIn: 'عرض الكل في',
+        viewAllProducts: 'عرض جميع المنتجات',
+        subCategoriesCount: 'أقسام فرعية',
+        productsCountUnit: 'منتج',
+
+        // Home Page
+        heroBadge: 'متجر قوارير الرسمي • ميكب • برفانات • عناية بالبشرة',
+        heroTitle1: 'اكتشفي سر جمالك مع',
+        heroTitle2: 'تشكيلة قوارير الفاخرة',
+        heroSubtitle: 'أفضل منتجات الميكب، البرفانات الثابتة، وروتين العناية بالبشرة بأسعار تنافسية. توصيل سريع من المحل لباب البيت أو استلام مجاني من الفرع مع الدفع عند الاستلام.',
+        heroCtaShop: 'تسوق الآن',
+        heroCtaBest: 'الأكثر مبيعاً',
+        shopByCatEyebrow: 'تصفح منظم وسريع',
+        shopByCatTitle: 'تسوقي حسب القسم',
+        shopByCatDesc: 'اختاري القسم الرئيسي أو انتقلي مباشرة للقسم الفرعي المفضل لديكِ',
+        bestSellersEyebrow: 'اختيارات عميلاتنا',
+        bestSellersTitle: 'الأكثر مبيعاً في قوارير',
+        viewFullStore: 'عرض كل المتجر',
+
+        // Trust Strip
+        trust1Title: 'منتجات أصلية 100%',
+        trust1Desc: 'جودة مضمونة ومختارة بعناية فائقة',
+        trust2Title: 'توصيل محلي أو استلام مجاني',
+        trust2Desc: 'توصيل لباب البيت أو استلام فوري من الفرع',
+        trust3Title: 'الدفع عند الاستلام (COD)',
+        trust3Desc: 'ادفعي كاش بأمان بعد استلام طلبك',
+
+        // Promo Banner
+        promoBadge: 'عرض التوصيل المجاني',
+        promoTitle: 'توصيل مجاني تماماً للطلبات التي تزيد عن 1,000 ج.م!',
+        promoDesc: 'اجمعي منتجاتك المفضلة من الميكب والبرفانات والعناية بالبشرة واستفيدي من الشحن المجاني تلقائياً في السلة.',
+        promoBtn: 'ابدئي التسوق الآن',
+
+        // Footer
+        footerDesc: 'وجهتك الأولى للميكب الأصلي، البرفانات الفاخرة، ومنتجات العناية بالبشرة في مصر.',
+        footerQuickLinks: 'روابط سريعة',
+        footerContact: 'تواصلي معنا',
+        footerWhatsapp: 'تواصل عبر واتساب',
+        footerRights: 'جميع الحقوق محفوظة لمتجر قوارير | Qwareer',
+
+        // Store Page
+        storeTitle: 'متجر قوارير',
+        storeSubtitle: 'تصفحي كافة المنتجات وفلترتها حسب القسم الرئيسي والفرعي',
+        searchPlaceholder: 'ابحثي بالاسم العربي أو الإنجليزي...',
+        sortLabel: 'ترتيب:',
+        sortFeatured: 'الأكثر مبيعاً',
+        sortPriceAsc: 'السعر: من الأقل للأعلى',
+        sortPriceDesc: 'السعر: من الأعلى للأقل',
+        allCategories: 'الكل',
+        clearFilters: 'مسح الفلاتر',
+        showingResults: 'عرض',
+        resultsIn: 'في',
+        noProductsTitle: 'لا توجد منتجات مطابقة لبحثك',
+        noProductsDesc: 'جربي تغيير القسم الفرعي أو كلمة البحث.',
+        shadeLabel: 'الدرجة:',
+        addToCart: 'أضف للسلة',
+        addedToCartToast: 'تمت إضافة المنتج إلى السلة',
+
+        // Cart & Checkout Drawer
+        cartTitle: 'سلة المشتريات',
+        cartEmptyTitle: 'سلتك فارغة حالياً',
+        cartEmptyDesc: 'تصفحي منتجات قوارير وأضيفي ما يناسبك مع الدفع عند الاستلام.',
+        cartBrowseBtn: 'تصفحي المتجر',
+        freeShipProgress: 'أضيفي بقيمة',
+        freeShipProgressEnd: 'للحصول على توصيل مجاني!',
+        freeShipUnlocked: '🎉 مبروك! حصلتِ على توصيل مجاني لطلبك',
+        deliveryTitle: 'طريقة التوصيل والاستلام',
+        deliveryHome: 'توصيل من المكان (لباب البيت)',
+        deliveryHomeDesc: 'اختاري المنطقة لمعرفة تكلفة التوصيل',
+        deliveryPickup: 'استلام مجاني من الفرع',
+        deliveryPickupDesc: 'جهزي طلبك واستلميه مباشرة من محل قوارير',
+        freeLabel: 'مجاني',
+        areaLocal: 'المنطقة المحلية / وسط البلد — 35 ج.م',
+        areaNearby: 'المدن والأحياء المجاورة — 55 ج.م',
+        areaCairoGiza: 'القاهرة والجيزة — 75 ج.م',
+        codTitle: 'الدفع عند الاستلام (COD)',
+        codDesc: 'الوسيلة الأساسية — ادفعي كاش عند استلام طلبك',
+        subtotal: 'المجموع الفرعي',
+        deliveryFee: 'مصاريف التوصيل',
+        total: 'الإجمالي النهائي',
+        proceedCheckout: 'إتمام الطلب الآن',
+        backToCart: 'العودة للسلة',
+        checkoutTitle: 'بيانات إتمام الطلب',
+        fullName: 'الاسم بالكامل',
+        fullNamePh: 'مثال: سارة محمود',
+        phone: 'رقم الموبايل (واتساب)',
+        phonePh: '01012345678',
+        address: 'العنوان بالتفصيل / ملاحظات',
+        addressPh: 'الشارع، العمارة، الدور، علامة مميزة...',
+        pickupNotesPh: 'موعد الاستلام المفضل من الفرع (اختياري)...',
+        confirmOrderBtn: 'تأكيد الطلب الآن',
+        errName: 'يرجى إدخال الاسم بالكامل بشكل صحيح.',
+        errPhone: 'يرجى إدخال رقم موبايل صحيح (10 أرقام على الأقل).',
+        errAddress: 'يرجى إدخال العنوان بالتفصيل لتوصيل الطلب.',
+        orderConfirmedBadge: 'تم تسجيل طلبك بنجاح!',
+        orderConfirmedTitle: 'شكراً لتسوقك من قوارير',
+        orderNumberLabel: 'رقم الطلب:',
+        copyBtn: 'نسخ',
+        copiedToast: 'تم نسخ رقم الطلب',
+        sendWhatsappBtn: 'إرسال الطلب عبر واتساب',
+        viewInAdminBtn: 'عرض الطلب في لوحة الإدارة',
+        continueShopping: 'متابعة التسوق',
+
+        // Admin Panel
+        adminBrand: 'قوارير | الإدارة',
+        adminRole: 'لوحة تحكم التاجر',
+        backToStore: 'العودة للمتجر',
+        resetDemo: 'استعادة البيانات الافتراضية',
+        resetDoneToast: 'تمت استعادة البيانات التجريبية بنجاح',
+        adminMenuTitle: 'القائمة الرئيسية',
+        adminTabDashboard: 'لوحة التحكم',
+        adminTabOrders: 'إدارة الطلبات',
+        adminTabProducts: 'المنتجات',
+        adminTabCategories: 'الأقسام الرئيسية والفرعية',
+        adminSubDashboard: 'ملخص المبيعات، الطلبات الحديثة، ونشاط المتجر',
+        adminSubOrders: 'متابعة طلبات العملاء وتحديث حالة التوصيل لحظياً',
+        adminSubProducts: 'إدارة المنتجات وإضافة منتجات جديدة بالعربية والإنجليزية',
+        adminSubCategories: 'شجرة الأقسام الرئيسية وإضافة أقسام فرعية جديدة',
+
+        kpiSales: 'إجمالي المبيعات',
+        kpiNewOrders: 'الطلبات الجديدة',
+        kpiProducts: 'إجمالي المنتجات',
+        kpiSubCats: 'الأقسام الفرعية',
+        recentOrdersTitle: 'أحدث الطلبات الواردة',
+        viewAllOrders: 'عرض كل الطلبات',
+        categoriesDistTitle: 'توزيع الأقسام',
+        manageLink: 'إدارة',
+
+        thOrderId: 'رقم الطلب',
+        thCustomer: 'العميل',
+        thItems: 'المنتجات',
+        thDelivery: 'التوصيل والعنوان',
+        thTotal: 'الإجمالي والدفع',
+        thStatus: 'الحالة',
+        noOrdersFilter: 'لا توجد طلبات بهذه الحالة حالياً',
+        statusUpdatedToast: 'تم تحديث حالة الطلب',
+
+        addProductTitle: 'إضافة منتج جديد للمتجر',
+        prodNameAr: 'اسم المنتج (عربي)',
+        prodNameEn: 'اسم المنتج (إنجليزي)',
+        mainCategory: 'القسم الرئيسي',
+        subCategory: 'القسم الفرعي',
+        priceEgp: 'السعر (ج.م)',
+        variantTypeLabel: 'نوع الخيارات',
+        variantSizeOpt: 'أحجام (مثل 50ml / 100ml)',
+        variantShadeOpt: 'درجات ألوان (ميكب)',
+        variantValuesLabel: 'الخيارات (افصل بفاصلة)',
+        saveProductBtn: 'حفظ ونشر المنتج',
+        productAddedToast: 'تمت إضافة المنتج ونشره في المتجر فوراً',
+        productDeletedToast: 'تم حذف المنتج بنجاح',
+        productsListTitle: 'قائمة المنتجات الحالية',
+        thProduct: 'المنتج',
+        thCatHierarchy: 'القسم الرئيسي › الفرعي',
+        thPrice: 'السعر',
+        thVariants: 'الخيارات',
+        thAction: 'إجراء',
+
+        addSubCatTitle: 'إضافة قسم فرعي جديد (يظهر فوراً في القائمة الجانبية والمتجر)',
+        subNameAr: 'اسم القسم الفرعي (عربي)',
+        subNameEn: 'اسم القسم الفرعي (إنجليزي)',
+        addSubCatBtn: 'إضافة القسم الفرعي',
+        subCatAddedToast: 'تمت إضافة القسم الفرعي وتحديث القوائم فوراً',
+
+        // Order Statuses
+        st_all: 'الكل',
+        st_new: 'جديد',
+        st_processing: 'جاري التجهيز',
+        st_out: 'خرج للتوصيل',
+        st_delivered: 'تم التسليم',
+        st_cancelled: 'ملغي'
+      },
+      en: {
+        brandMain: 'Qwareer',
+        brandSub: 'قوارير',
+        langSwitch: 'عربي',
+        currency: 'EGP',
+        topPromo: '✨ 100% Authentic Beauty • Free Delivery on Orders Over 1,000 EGP • Cash on Delivery (COD)',
+
+        // Navigation
+        navHome: 'Home',
+        navCategories: 'Categories',
+        navStore: 'Store',
+        navAdmin: 'Admin Panel',
+        navCart: 'Cart',
+        viewAllIn: 'View All in',
+        viewAllProducts: 'View All Products',
+        subCategoriesCount: 'Sub-categories',
+        productsCountUnit: 'items',
+
+        // Home Page
+        heroBadge: 'Official Qwareer Store • Makeup • Perfumes • Skincare',
+        heroTitle1: 'Discover Your Radiance with',
+        heroTitle2: 'Qwareer Luxury Beauty',
+        heroSubtitle: 'Authentic makeup, long-lasting perfumes, and daily skincare essentials in Egypt. Fast local delivery or free store pickup with Cash on Delivery.',
+        heroCtaShop: 'Shop Now',
+        heroCtaBest: 'Best Sellers',
+        shopByCatEyebrow: 'Curated Collections',
+        shopByCatTitle: 'Shop by Category',
+        shopByCatDesc: 'Explore main departments or jump straight into any sub-category',
+        bestSellersEyebrow: 'Customer Favorites',
+        bestSellersTitle: 'Best Sellers at Qwareer',
+        viewFullStore: 'Explore Full Store',
+
+        // Trust Strip
+        trust1Title: '100% Original Products',
+        trust1Desc: 'Guaranteed authenticity & curated quality',
+        trust2Title: 'Local Delivery or Free Pickup',
+        trust2Desc: 'Doorstep delivery or instant branch pickup',
+        trust3Title: 'Cash on Delivery (COD)',
+        trust3Desc: 'Pay safely in cash upon receiving your order',
+
+        // Promo Banner
+        promoBadge: 'Free Delivery Offer',
+        promoTitle: 'Enjoy Free Delivery on Orders Over 1,000 EGP!',
+        promoDesc: 'Mix and match your favorite makeup, fragrances, and skincare essentials and unlock free shipping automatically at checkout.',
+        promoBtn: 'Start Shopping Now',
+
+        // Footer
+        footerDesc: 'Your trusted destination for authentic makeup, luxury fragrances, and daily skincare in Egypt.',
+        footerQuickLinks: 'Quick Links',
+        footerContact: 'Contact Us',
+        footerWhatsapp: 'Chat on WhatsApp',
+        footerRights: 'All rights reserved © Qwareer | قوارير',
+
+        // Store Page
+        storeTitle: 'Qwareer Store',
+        storeSubtitle: 'Browse all products and filter by main & sub-categories',
+        searchPlaceholder: 'Search in Arabic or English...',
+        sortLabel: 'Sort:',
+        sortFeatured: 'Featured',
+        sortPriceAsc: 'Price: Low to High',
+        sortPriceDesc: 'Price: High to Low',
+        allCategories: 'All',
+        clearFilters: 'Clear Filters',
+        showingResults: 'Showing',
+        resultsIn: 'in',
+        noProductsTitle: 'No matching products found',
+        noProductsDesc: 'Try switching sub-categories or clearing your search query.',
+        shadeLabel: 'Shade:',
+        addToCart: 'Add to Cart',
+        addedToCartToast: 'Added to your cart',
+
+        // Cart & Checkout Drawer
+        cartTitle: 'Shopping Cart',
+        cartEmptyTitle: 'Your cart is currently empty',
+        cartEmptyDesc: 'Explore Qwareer collections and enjoy Cash on Delivery.',
+        cartBrowseBtn: 'Browse Store',
+        freeShipProgress: 'Add',
+        freeShipProgressEnd: 'more to unlock Free Delivery!',
+        freeShipUnlocked: '🎉 Congrats! Your order qualifies for Free Delivery',
+        deliveryTitle: 'Delivery & Pickup Options',
+        deliveryHome: 'Delivery from Store',
+        deliveryHomeDesc: 'Select your area for delivery pricing',
+        deliveryPickup: 'Free Store Pickup',
+        deliveryPickupDesc: 'Order online and collect directly from Qwareer branch',
+        freeLabel: 'Free',
+        areaLocal: 'Local Area / Downtown — 35 EGP',
+        areaNearby: 'Nearby Cities — 55 EGP',
+        areaCairoGiza: 'Cairo & Giza — 75 EGP',
+        codTitle: 'Cash on Delivery (COD)',
+        codDesc: 'Primary payment method — pay cash when your order arrives',
+        subtotal: 'Subtotal',
+        deliveryFee: 'Delivery Fee',
+        total: 'Total',
+        proceedCheckout: 'Proceed to Checkout',
+        backToCart: 'Back to Cart',
+        checkoutTitle: 'Complete Your Order',
+        fullName: 'Full Name',
+        fullNamePh: 'e.g. Sara Mahmoud',
+        phone: 'Mobile Number (WhatsApp)',
+        phonePh: '01012345678',
+        address: 'Delivery Address / Notes',
+        addressPh: 'Street, building, floor, landmark...',
+        pickupNotesPh: 'Preferred pickup time at store (optional)...',
+        confirmOrderBtn: 'Confirm Order Now',
+        errName: 'Please enter your full name.',
+        errPhone: 'Please enter a valid mobile number (at least 10 digits).',
+        errAddress: 'Please enter your detailed delivery address.',
+        orderConfirmedBadge: 'Order Placed Successfully!',
+        orderConfirmedTitle: 'Thank you for shopping at Qwareer',
+        orderNumberLabel: 'Order Number:',
+        copyBtn: 'Copy',
+        copiedToast: 'Order ID copied',
+        sendWhatsappBtn: 'Send Order via WhatsApp',
+        viewInAdminBtn: 'View Order in Admin Panel',
+        continueShopping: 'Continue Shopping',
+
+        // Admin Panel
+        adminBrand: 'Qwareer | Admin',
+        adminRole: 'Store Management',
+        backToStore: 'Back to Store',
+        resetDemo: 'Reset Demo Data',
+        resetDoneToast: 'Demo data restored successfully',
+        adminMenuTitle: 'Main Menu',
+        adminTabDashboard: 'Dashboard',
+        adminTabOrders: 'Orders Management',
+        adminTabProducts: 'Products',
+        adminTabCategories: 'Categories & Sub-categories',
+        adminSubDashboard: 'Live overview of sales, orders, and catalog metrics',
+        adminSubOrders: 'Track incoming orders and update fulfillment status live',
+        adminSubProducts: 'Manage catalog items and add bilingual products',
+        adminSubCategories: 'Organize main categories and add new sub-categories',
+
+        kpiSales: 'Total Sales',
+        kpiNewOrders: 'New Orders',
+        kpiProducts: 'Total Products',
+        kpiSubCats: 'Sub-categories',
+        recentOrdersTitle: 'Recent Incoming Orders',
+        viewAllOrders: 'View All Orders',
+        categoriesDistTitle: 'Categories Breakdown',
+        manageLink: 'Manage',
+
+        thOrderId: 'Order ID',
+        thCustomer: 'Customer',
+        thItems: 'Items',
+        thDelivery: 'Delivery & Address',
+        thTotal: 'Total & Payment',
+        thStatus: 'Status',
+        noOrdersFilter: 'No orders match this status filter',
+        statusUpdatedToast: 'Order status updated',
+
+        addProductTitle: 'Add New Product to Store',
+        prodNameAr: 'Product Name (Arabic)',
+        prodNameEn: 'Product Name (English)',
+        mainCategory: 'Main Category',
+        subCategory: 'Sub-category',
+        priceEgp: 'Price (EGP)',
+        variantTypeLabel: 'Variant Type',
+        variantSizeOpt: 'Sizes (e.g. 50ml, 100ml)',
+        variantShadeOpt: 'Color Shades (Makeup)',
+        variantValuesLabel: 'Options (comma-separated)',
+        saveProductBtn: 'Save & Publish Product',
+        productAddedToast: 'Product published to the store immediately',
+        productDeletedToast: 'Product deleted',
+        productsListTitle: 'Current Catalog Products',
+        thProduct: 'Product',
+        thCatHierarchy: 'Main › Sub Category',
+        thPrice: 'Price',
+        thVariants: 'Variants',
+        thAction: 'Action',
+
+        addSubCatTitle: 'Add New Sub-category (Updates Flyout Menu & Store Live)',
+        subNameAr: 'Sub-category Name (Arabic)',
+        subNameEn: 'Sub-category Name (English)',
+        addSubCatBtn: 'Add Sub-category',
+        subCatAddedToast: 'Sub-category added and menus updated live',
+
+        // Order Statuses
+        st_all: 'All',
+        st_new: 'New',
+        st_processing: 'Processing',
+        st_out: 'Out for Delivery',
+        st_delivered: 'Delivered',
+        st_cancelled: 'Cancelled'
+      }
+    };
+
+    function t(key) {
+      return (I18N[appState.lang] && I18N[appState.lang][key]) || key;
+    }
+
+    function loc(obj) {
+      if (!obj) return '';
+      if (typeof obj === 'string') return obj;
+      return obj[appState.lang] || obj.ar || obj.en || '';
+    }
+
+    /**
+     * =========================================================================
+     * 2. BRAND SVG LOGO & BILINGUAL SEED DATA
+     * =========================================================================
+     */
+    const STORAGE_KEY = 'qwareer_bilingual_mvp_v3';
+
+    function getQwareerLogoSVG(clipId) {
+      return `
+        <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-xs">
+          <defs>
+            <clipPath id="${clipId}">
+              <rect x="20" y="20" width="80" height="80" rx="22" transform="rotate(45 60 60)" />
+            </clipPath>
+          </defs>
+          <g clip-path="url(#${clipId})">
+            <rect x="0" y="0" width="120" height="120" fill="#A672B1" />
+            <circle cx="72" cy="24" r="52" fill="#6E2468" />
+            <circle cx="96" cy="70" r="50" fill="#D22F7C" fill-opacity="0.90" />
+            <circle cx="56" cy="108" r="44" fill="#B8256B" fill-opacity="0.85" />
+            <path d="M22 65C38 42 75 40 105 64C88 95 45 102 22 65Z" fill="#6E2468" fill-opacity="0.42" />
+            <circle cx="22" cy="58" r="34" fill="#A672B1" fill-opacity="0.72" />
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M60 35C45.088 35 33 47.088 33 62C33 76.912 45.088 89 60 89C65.4 89 70.4 87.4 74.6 84.7L88 97L97 87L83.4 75.5C85.7 71.5 87 66.9 87 62C87 47.088 74.912 35 60 35ZM60 49C52.82 49 47 54.82 47 62C47 69.18 52.82 75 60 75C67.18 75 73 69.18 73 62C73 54.82 67.18 49 60 49Z" fill="#FFFFFF" />
+            <path d="M56 72L73 87L84 78L66 67H56V72Z" fill="#FFFFFF" />
+          </g>
+        </svg>
+      `;
+    }
+
+    const DEFAULT_CATEGORIES = [
+      {
+        id: 'makeup',
+        name: { ar: 'ميكب', en: 'Makeup' },
+        icon: 'palette',
+        gradient: 'from-plum to-magenta',
+        subCategories: [
+          { id: 'face', name: { ar: 'الوجه', en: 'Face' } },
+          { id: 'lips', name: { ar: 'الشفاه', en: 'Lips' } },
+          { id: 'eyes', name: { ar: 'العيون', en: 'Eyes' } }
+        ]
+      },
+      {
+        id: 'perfumes',
+        name: { ar: 'برفانات', en: 'Perfumes' },
+        icon: 'sparkles',
+        gradient: 'from-[#5B1D6E] to-[#A672B1]',
+        subCategories: [
+          { id: 'women', name: { ar: 'عطور حريمي', en: "Women's" } },
+          { id: 'men', name: { ar: 'عطور رجالي', en: "Men's" } },
+          { id: 'bodymist', name: { ar: 'بودي ميست', en: 'Body Mist' } }
+        ]
+      },
+      {
+        id: 'skincare',
+        name: { ar: 'عناية بالبشرة', en: 'Skincare' },
+        icon: 'droplets',
+        gradient: 'from-[#8E2469] to-[#D22F7C]',
+        subCategories: [
+          { id: 'cleansers', name: { ar: 'غسول وتونر', en: 'Cleansers & Toners' } },
+          { id: 'serums', name: { ar: 'سيروم وعلاجات', en: 'Serums & Treatments' } },
+          { id: 'moisturizers', name: { ar: 'مرطبات وواقي شمس', en: 'Moisturizers & Sunscreen' } }
+        ]
+      }
+    ];
+
+    const DEFAULT_PRODUCTS = [
+      // MAKEUP -> FACE
+      {
+        id: 'p-1',
+        name: { ar: 'فاونديشن مات تغطية كاملة', en: 'Matte HD Full-Coverage Foundation' },
+        description: {
+          ar: 'تغطية مخملية ثابتة طوال اليوم مناسبة للبشرة المختلطة والدهنية.',
+          en: 'All-day velvet matte finish designed for combination & oily skin.'
+        },
+        badge: { ar: 'الأكثر مبيعاً', en: 'Best Seller' },
+        categoryId: 'makeup',
+        subCategoryId: 'face',
+        featured: true,
+        salesCount: 112,
+        svgType: 'foundation',
+        variantType: 'swatch',
+        variants: [
+          { label: { ar: 'عاجي فاتح 101', en: 'Ivory 101' }, color: '#F2D5BE', price: 480 },
+          { label: { ar: 'بيج طبيعي 202', en: 'Natural Beige 202' }, color: '#DFB18E', price: 480 },
+          { label: { ar: 'قمحاوي دافئ 303', en: 'Warm Honey 303' }, color: '#C68F68', price: 480 }
+        ]
+      },
+      {
+        id: 'p-2',
+        name: { ar: 'بلاشر كريمي مخملي للخدود', en: 'Velvet Cream Cheek Blush' },
+        description: {
+          ar: 'لمسة نضارة طبيعية سهلة الدمج تدوم ساعات بدون تكتل.',
+          en: 'Buildable natural flush that blends effortlessly for hours.'
+        },
+        badge: { ar: 'جديد', en: 'New' },
+        categoryId: 'makeup',
+        subCategoryId: 'face',
+        featured: false,
+        salesCount: 74,
+        svgType: 'blush',
+        variantType: 'swatch',
+        variants: [
+          { label: { ar: 'خوخي ناعم', en: 'Soft Peach' }, color: '#F2948A', price: 265 },
+          { label: { ar: 'بينك كشمير', en: 'Cashmere Pink' }, color: '#D96B96', price: 265 },
+          { label: { ar: 'توتي دافئ', en: 'Warm Berry' }, color: '#A83B68', price: 265 }
+        ]
+      },
+      // MAKEUP -> LIPS
+      {
+        id: 'p-3',
+        name: { ar: 'روج مات ثابت مخملي', en: 'Velvet Long-Wear Matte Lipstick' },
+        description: {
+          ar: 'ثبات حتى 12 ساعة بتركيبة غنية بفيتامين E لا تسبب جفاف الشفاه.',
+          en: 'Up to 12-hour wear enriched with Vitamin E for non-drying comfort.'
+        },
+        badge: { ar: 'الأكثر مبيعاً', en: 'Best Seller' },
+        categoryId: 'makeup',
+        subCategoryId: 'lips',
+        featured: true,
+        salesCount: 145,
+        svgType: 'lipstick',
+        variantType: 'swatch',
+        variants: [
+          { label: { ar: 'كشمير قوارير', en: 'Qwareer Mauve' }, color: '#B85A7C', price: 245 },
+          { label: { ar: 'نود روز', en: 'Rose Nude' }, color: '#C98276', price: 245 },
+          { label: { ar: 'أحمر كلاسيك', en: 'Classic Red' }, color: '#C01E3A', price: 245 },
+          { label: { ar: 'برقوقي داكن', en: 'Deep Plum' }, color: '#6E2468', price: 245 }
+        ]
+      },
+      {
+        id: 'p-4',
+        name: { ar: 'ليب جلوس لامع مرطب للشفاه', en: 'Crystal Hydrating Lip Gloss' },
+        description: {
+          ar: 'لمعة كريستالية جذابة مع ترطيب فوري بدون إحساس لزج.',
+          en: 'Mirror-like glass shine with instant hydration and zero stickiness.'
+        },
+        badge: { ar: 'جديد', en: 'New' },
+        categoryId: 'makeup',
+        subCategoryId: 'lips',
+        featured: false,
+        salesCount: 82,
+        svgType: 'lipgloss',
+        variantType: 'swatch',
+        variants: [
+          { label: { ar: 'شفاف لامع', en: 'Clear Glaze' }, color: '#F7D8E8', price: 195 },
+          { label: { ar: 'وردي لؤلؤي', en: 'Pearl Pink' }, color: '#E885B2', price: 195 },
+          { label: { ar: 'كراميل نود', en: 'Caramel Nude' }, color: '#C4816D', price: 195 }
+        ]
+      },
+      // MAKEUP -> EYES
+      {
+        id: 'p-5',
+        name: { ar: 'ماسكارا لتكثيف وتطويل الرموش', en: 'Lash Lift & Volume Mascara' },
+        description: {
+          ar: 'فرشاة سيليكون دقيقة ترفع وتكثف الرموش من أول طبقة.',
+          en: 'Precision silicone wand lifts and volumizes lashes in one coat.'
+        },
+        badge: { ar: 'الأكثر مبيعاً', en: 'Best Seller' },
+        categoryId: 'makeup',
+        subCategoryId: 'eyes',
+        featured: true,
+        salesCount: 98,
+        svgType: 'mascara',
+        variantType: 'pill',
+        variants: [
+          { label: { ar: 'أسود فاحم', en: 'Jet Black' }, price: 290 },
+          { label: { ar: 'مقاوم للماء', en: 'Waterproof' }, price: 320 }
+        ]
+      },
+      {
+        id: 'p-6',
+        name: { ar: 'باليت آيشادو 12 لون مات وشيمر', en: '12-Shade Matte & Shimmer Palette' },
+        description: {
+          ar: 'ألوان عالية الصبغة سهلة الدمج لإطلالات النهار والمناسبات.',
+          en: 'Richly pigmented, buttery blendable shades for day-to-night glam.'
+        },
+        badge: { ar: 'مميز', en: 'Featured' },
+        categoryId: 'makeup',
+        subCategoryId: 'eyes',
+        featured: false,
+        salesCount: 68,
+        svgType: 'eyeshadow',
+        variantType: 'pill',
+        variants: [
+          { label: { ar: 'نود وكشمير', en: 'Mauve & Nude' }, price: 520 },
+          { label: { ar: 'برونز وسموكي', en: 'Bronze Smokey' }, price: 540 }
+        ]
+      },
+      // PERFUMES -> WOMEN
+      {
+        id: 'p-7',
+        name: { ar: 'برفان فانيليا وعود ملكي حريمي', en: 'Royal Vanilla & Oud Eau de Parfum' },
+        description: {
+          ar: 'مزيج أنثوي فاخر من الفانيليا الدافئة والعود الناعم بثبات استثنائي.',
+          en: 'Opulent feminine blend of warm Madagascar vanilla and silky oud.'
+        },
+        badge: { ar: 'الأكثر مبيعاً', en: 'Best Seller' },
+        categoryId: 'perfumes',
+        subCategoryId: 'women',
+        featured: true,
+        salesCount: 132,
+        svgType: 'perfume_oud',
+        variantType: 'pill',
+        variants: [
+          { label: { ar: '50 مل', en: '50 ml' }, price: 650 },
+          { label: { ar: '100 مل', en: '100 ml' }, price: 1120 }
+        ]
+      },
+      {
+        id: 'p-8',
+        name: { ar: 'عطر زهري فرنسي (فلور قوارير)', en: 'Fleur Qwareer French Floral EDP' },
+        description: {
+          ar: 'عبير الياسمين والفاوانيا مع قاعدة مسك أبيض لإطلالة ناعمة.',
+          en: 'Radiant jasmine and peony bouquet resting on soft white musk.'
+        },
+        badge: { ar: 'جديد', en: 'New' },
+        categoryId: 'perfumes',
+        subCategoryId: 'women',
+        featured: true,
+        salesCount: 92,
+        svgType: 'perfume_floral',
+        variantType: 'pill',
+        variants: [
+          { label: { ar: '50 مل', en: '50 ml' }, price: 720 },
+          { label: { ar: '100 مل', en: '100 ml' }, price: 1250 }
+        ]
+      },
+      // PERFUMES -> MEN
+      {
+        id: 'p-9',
+        name: { ar: 'برفان عود وعنبر رجالي كلاسيك', en: 'Classic Amber & Oud Pour Homme' },
+        description: {
+          ar: 'عطر رجالي فخم بنفحات العنبر والأخشاب العطرية للسهرات والمناسبات.',
+          en: 'Bold masculine scent with warm amber and smoked cedarwood notes.'
+        },
+        badge: { ar: 'الأكثر مبيعاً', en: 'Best Seller' },
+        categoryId: 'perfumes',
+        subCategoryId: 'men',
+        featured: false,
+        salesCount: 84,
+        svgType: 'perfume_men',
+        variantType: 'pill',
+        variants: [
+          { label: { ar: '50 مل', en: '50 ml' }, price: 690 },
+          { label: { ar: '100 مل', en: '100 ml' }, price: 1180 }
+        ]
+      },
+      {
+        id: 'p-10',
+        name: { ar: 'أو دي بارفان أكوا سبورت رجالي', en: 'Aqua Sport Fresh EDP for Men' },
+        description: {
+          ar: 'رائحة بحرية حمضية منعشة مثالية للاستخدام اليومي والعمل.',
+          en: 'Crisp marine and bergamot freshness ideal for everyday wear.'
+        },
+        badge: { ar: 'جديد', en: 'New' },
+        categoryId: 'perfumes',
+        subCategoryId: 'men',
+        featured: false,
+        salesCount: 64,
+        svgType: 'perfume_men_blue',
+        variantType: 'pill',
+        variants: [
+          { label: { ar: '50 مل', en: '50 ml' }, price: 590 },
+          { label: { ar: '100 مل', en: '100 ml' }, price: 980 }
+        ]
+      },
+      // PERFUMES -> BODY MIST
+      {
+        id: 'p-11',
+        name: { ar: 'بودي ميست روز وبيري المنعش', en: 'Rose & Wild Berry Body Mist' },
+        description: {
+          ar: 'معطر جسم برائحة الورد الدمشقي والتوت الأحمر لانتعاش طوال اليوم.',
+          en: 'Refreshing mist infused with Damask rose and juicy red berries.'
+        },
+        badge: { ar: 'الأكثر مبيعاً', en: 'Best Seller' },
+        categoryId: 'perfumes',
+        subCategoryId: 'bodymist',
+        featured: true,
+        salesCount: 109,
+        svgType: 'bodymist',
+        variantType: 'pill',
+        variants: [
+          { label: { ar: '150 مل', en: '150 ml' }, price: 280 },
+          { label: { ar: '250 مل', en: '250 ml' }, price: 390 }
+        ]
+      },
+      {
+        id: 'p-12',
+        name: { ar: 'بودي ميست فانيليا شيمر لامع', en: 'Vanilla Shimmer Glow Body Mist' },
+        description: {
+          ar: 'رائحة فانيليا وكوكو دافئة مع لمعة جليتر ناعمة تبرز جمال البشرة.',
+          en: 'Sweet vanilla scent with ultra-fine shimmer for radiant glowing skin.'
+        },
+        badge: { ar: 'جديد', en: 'New' },
+        categoryId: 'perfumes',
+        subCategoryId: 'bodymist',
+        featured: false,
+        salesCount: 73,
+        svgType: 'bodymist_gold',
+        variantType: 'pill',
+        variants: [
+          { label: { ar: '150 مل', en: '150 ml' }, price: 310 },
+          { label: { ar: '250 مل', en: '250 ml' }, price: 430 }
+        ]
+      },
+      // SKINCARE -> CLEANSERS
+      {
+        id: 'p-13',
+        name: { ar: 'غسول بالهيالورونيك أسيد', en: 'Hyaluronic Acid Hydrating Cleanser' },
+        description: {
+          ar: 'ينظف المسام بلطف ويزيل الشوائب دون تجريد البشرة من رطوبتها.',
+          en: 'Gently purifies pores while locking in essential skin moisture.'
+        },
+        badge: { ar: 'الأكثر مبيعاً', en: 'Best Seller' },
+        categoryId: 'skincare',
+        subCategoryId: 'cleansers',
+        featured: false,
+        salesCount: 94,
+        svgType: 'cleanser',
+        variantType: 'pill',
+        variants: [
+          { label: { ar: '200 مل (مختلطة/دهنية)', en: '200ml (Oily/Combo)' }, price: 295 },
+          { label: { ar: '200 مل (جافة/عادية)', en: '200ml (Dry/Normal)' }, price: 295 }
+        ]
+      },
+      {
+        id: 'p-14',
+        name: { ar: 'تونر النياسيناميد لتصغير المسام', en: 'Niacinamide Pore-Refining Toner' },
+        description: {
+          ar: 'يوازن إفراز الدهون ويهدئ البشرة ويهيئها لامتصاص السيروم.',
+          en: 'Alcohol-free toner that balances oil and visibly tightens pores.'
+        },
+        badge: { ar: 'جديد', en: 'New' },
+        categoryId: 'skincare',
+        subCategoryId: 'cleansers',
+        featured: false,
+        salesCount: 68,
+        svgType: 'toner',
+        variantType: 'pill',
+        variants: [
+          { label: { ar: '150 مل', en: '150 ml' }, price: 260 },
+          { label: { ar: '250 مل', en: '250 ml' }, price: 375 }
+        ]
+      },
+      // SKINCARE -> SERUMS
+      {
+        id: 'p-15',
+        name: { ar: 'سيروم فيتامين سي للنضارة والتفتيح', en: 'Vitamin C Brightening Glow Serum' },
+        description: {
+          ar: 'يوحد لون البشرة ويمنحها إشراقة فورية ويقلل آثار البقع الداكنة.',
+          en: 'Boosts radiance, evens skin tone, and targets dullness & dark spots.'
+        },
+        badge: { ar: 'الأكثر مبيعاً', en: 'Best Seller' },
+        categoryId: 'skincare',
+        subCategoryId: 'serums',
+        featured: true,
+        salesCount: 126,
+        svgType: 'serum',
+        variantType: 'pill',
+        variants: [
+          { label: { ar: '30 مل', en: '30 ml' }, price: 360 },
+          { label: { ar: '50 مل', en: '50 ml' }, price: 540 }
+        ]
+      },
+      {
+        id: 'p-16',
+        name: { ar: 'سيروم هيالورونيك أسيد بتركيز نقي', en: 'Pure 2% Hyaluronic Plumping Serum' },
+        description: {
+          ar: 'يعزز ترطيب الطبقات العميقة ويقلل مظهر الخطوط الدقيقة.',
+          en: 'Multi-weight hyaluronic acid for deep hydration and plump bounce.'
+        },
+        badge: { ar: 'مميز', en: 'Featured' },
+        categoryId: 'skincare',
+        subCategoryId: 'serums',
+        featured: false,
+        salesCount: 84,
+        svgType: 'serum_blue',
+        variantType: 'pill',
+        variants: [
+          { label: { ar: '30 مل', en: '30 ml' }, price: 340 },
+          { label: { ar: '50 مل', en: '50 ml' }, price: 495 }
+        ]
+      },
+      // SKINCARE -> MOISTURIZERS & SUNSCREEN
+      {
+        id: 'p-17',
+        name: { ar: 'صن بلوك SPF 50+ فلويد غير دهني', en: 'Invisible Fluid Sunscreen SPF 50+' },
+        description: {
+          ar: 'سريع الامتصاص لا يترك أي أثر أبيض ومناسب تحت الميكب.',
+          en: 'Ultra-lightweight broad-spectrum protection with zero white cast.'
+        },
+        badge: { ar: 'الأكثر مبيعاً', en: 'Best Seller' },
+        categoryId: 'skincare',
+        subCategoryId: 'moisturizers',
+        featured: true,
+        salesCount: 118,
+        svgType: 'sunblock',
+        variantType: 'pill',
+        variants: [
+          { label: { ar: 'شفاف (Invisible)', en: 'Invisible' }, price: 385 },
+          { label: { ar: 'تينتد خفيف (Tinted)', en: 'Light Tinted' }, price: 410 }
+        ]
+      },
+      {
+        id: 'p-18',
+        name: { ar: 'كريم مرطب ليلي بالكولاجين والسيراميد', en: 'Collagen & Ceramide Night Cream' },
+        description: {
+          ar: 'يرمم حاجز البشرة أثناء النوم ويمنحها مرونة ونعومة فائقة صباحاً.',
+          en: 'Restores the skin barrier overnight for soft, supple morning skin.'
+        },
+        badge: { ar: 'جديد', en: 'New' },
+        categoryId: 'skincare',
+        subCategoryId: 'moisturizers',
+        featured: false,
+        salesCount: 77,
+        svgType: 'cream',
+        variantType: 'pill',
+        variants: [
+          { label: { ar: '50 مل', en: '50 ml' }, price: 420 },
+          { label: { ar: '100 مل', en: '100 ml' }, price: 690 }
+        ]
+      }
+    ];
+
+    const DEFAULT_ORDERS = [
+      {
+        id: '#QWR-1041',
+        customerName: 'مريم أحمد الشريف',
+        phone: '01094827163',
+        deliveryMethod: 'delivery',
+        deliveryArea: { ar: 'المنطقة المحلية / وسط البلد', en: 'Local Area / Downtown' },
+        address: 'شارع الجمهورية، عمارة 14، الدور الثالث',
+        itemsSummary: 'روج مات ثابت مخملي (كشمير قوارير) ×1، برفان فانيليا وعود ملكي (50 مل) ×1',
+        total: 930,
+        status: 'processing',
+        createdAt: '2026-11-23 07:45 PM'
+      },
+      {
+        id: '#QWR-1042',
+        customerName: 'نورهان طارق حسن',
+        phone: '01123459812',
+        deliveryMethod: 'pickup',
+        deliveryArea: { ar: 'استلام مجاني من الفرع', en: 'Free Store Pickup' },
+        address: 'استلام مباشر من فرع قوارير - الساعة 6 م',
+        itemsSummary: 'سيروم فيتامين سي للنضارة (30 مل) ×1، صن بلوك SPF 50+ (شفاف) ×1',
+        total: 745,
+        status: 'new',
+        createdAt: '2026-11-23 09:20 PM'
+      },
+      {
+        id: '#QWR-1043',
+        customerName: 'Sara El-Sayed',
+        phone: '01277451290',
+        deliveryMethod: 'delivery',
+        deliveryArea: { ar: 'القاهرة والجيزة', en: 'Cairo & Giza' },
+        address: 'Nasr City, Abbas El-Akkad St., Bldg 22',
+        itemsSummary: 'Royal Vanilla & Oud EDP (100 ml) ×1',
+        total: 1120,
+        status: 'delivered',
+        createdAt: '2026-11-22 04:10 PM'
+      }
+    ];
+
+    const STATUS_KEYS = ['new', 'processing', 'out', 'delivered', 'cancelled'];
+    const STATUS_STYLES = {
+      new: 'bg-pink-100 text-magenta border-pink-200',
+      processing: 'bg-amber-100 text-amber-800 border-amber-200',
+      out: 'bg-sky-100 text-sky-800 border-sky-200',
+      delivered: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+      cancelled: 'bg-rose-100 text-rose-700 border-rose-200'
+    };
+
+    const DELIVERY_AREAS = [
+      { id: 'local', fee: 35, labelKey: 'areaLocal', name: { ar: 'المنطقة المحلية / وسط البلد', en: 'Local Area / Downtown' } },
+      { id: 'nearby', fee: 55, labelKey: 'areaNearby', name: { ar: 'المدن والأحياء المجاورة', en: 'Nearby Cities' } },
+      { id: 'cairo', fee: 75, labelKey: 'areaCairoGiza', name: { ar: 'القاهرة والجيزة', en: 'Cairo & Giza' } }
+    ];
+
+    /**
+     * =========================================================================
+     * 3. STATE MANAGEMENT & LOCALSTORAGE PERSISTENCE
+     * =========================================================================
+     */
+    function loadPersistedState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && Array.isArray(parsed.categories) && Array.isArray(parsed.products)) {
+            return parsed;
+          }
+        }
+      } catch (e) {}
+      return {
+        lang: 'ar',
+        categories: JSON.parse(JSON.stringify(DEFAULT_CATEGORIES)),
+        products: JSON.parse(JSON.stringify(DEFAULT_PRODUCTS)),
+        orders: JSON.parse(JSON.stringify(DEFAULT_ORDERS)),
+        cart: [],
+        lastOrderNumber: 1043
+      };
+    }
+
+    const saved = loadPersistedState();
+
+    const appState = {
+      lang: saved.lang || 'ar',
+      page: 'home',              // 'home' | 'store' | 'admin'
+      adminTab: 'dashboard',     // 'dashboard' | 'orders' | 'products' | 'categories'
+      adminOrderFilter: 'all',
+
+      // Store filters
+      activeMainCat: 'all',
+      activeSubCat: 'all',
+      searchQuery: '',
+      sortBy: 'featured',
+      selectedVariants: {},      // { productId: variantIndex }
+
+      // Cart & Checkout Drawer
+      cart: Array.isArray(saved.cart) ? saved.cart : [],
+      cartStep: 'cart',          // 'cart' | 'checkout' | 'success'
+      deliveryMethod: 'delivery',
+      deliveryAreaId: 'local',
+      lastOrder: null,
+
+      // Mobile accordion state
+      mobileOpenCatId: null,
+
+      // Persisted core collections
+      categories: saved.categories,
+      products: saved.products,
+      orders: saved.orders,
+      lastOrderNumber: saved.lastOrderNumber || 1043
+    };
+
+    function persistState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          lang: appState.lang,
+          categories: appState.categories,
+          products: appState.products,
+          orders: appState.orders,
+          cart: appState.cart,
+          lastOrderNumber: appState.lastOrderNumber
+        }));
+      } catch (e) {}
+    }
+
+    function resetDemoData() {
+      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+      appState.categories = JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
+      appState.products = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
+      appState.orders = JSON.parse(JSON.stringify(DEFAULT_ORDERS));
+      appState.cart = [];
+      appState.lastOrderNumber = 1043;
+      appState.activeMainCat = 'all';
+      appState.activeSubCat = 'all';
+      persistState();
+      renderApp();
+      showToast(t('resetDoneToast'));
+    }
+
+    function getCategory(catId) {
+      return appState.categories.find(c => c.id === catId);
+    }
+
+    function getSubCategory(catId, subId) {
+      const cat = getCategory(catId);
+      if (!cat) return null;
+      return cat.subCategories.find(s => s.id === subId) || null;
+    }
+
+    /**
+     * =========================================================================
+     * 4. COSMETIC SVG ILLUSTRATIONS (CRISP & ZERO BROKEN IMAGES)
+     * =========================================================================
+     */
+    function getProductSVG(svgType, accent = '#D22F7C') {
+      const svgs = {
+        lipstick: `<svg viewBox="0 0 160 160" class="w-28 h-28 drop-shadow-md" fill="none"><ellipse cx="80" cy="140" rx="30" ry="7" fill="#6E2468" fill-opacity="0.12"/><path d="M66 60V36C66 29 75 21 84 25C91 28 94 34 94 42V60H66Z" fill="${accent}"/><path d="M71 31C76 26 85 27 90 33C85 38 75 38 71 31Z" fill="#FFF" fill-opacity="0.32"/><rect x="62" y="60" width="36" height="24" rx="4" fill="#E6BE6A"/><rect x="58" y="84" width="44" height="52" rx="8" fill="#6E2468"/><rect x="64" y="90" width="6" height="40" rx="3" fill="#FFF" fill-opacity="0.18"/><text x="80" y="116" text-anchor="middle" fill="#FFF" font-size="13" font-weight="900">Q</text></svg>`,
+        lipgloss: `<svg viewBox="0 0 160 160" class="w-28 h-28 drop-shadow-md" fill="none"><ellipse cx="80" cy="140" rx="28" ry="7" fill="#D22F7C" fill-opacity="0.12"/><rect x="65" y="24" width="30" height="34" rx="8" fill="#D22F7C"/><rect x="62" y="58" width="36" height="78" rx="14" fill="#FFF" stroke="#6E2468" stroke-opacity="0.18" stroke-width="2"/><rect x="66" y="66" width="28" height="64" rx="10" fill="${accent}"/><rect x="70" y="72" width="5" height="52" rx="2.5" fill="#FFF" fill-opacity="0.45"/></svg>`,
+        foundation: `<svg viewBox="0 0 160 160" class="w-28 h-28 drop-shadow-md" fill="none"><ellipse cx="80" cy="142" rx="34" ry="7" fill="#6E2468" fill-opacity="0.12"/><rect x="70" y="20" width="20" height="12" rx="4" fill="#2A1C2D"/><path d="M88 23H104C106 23 107 25 105 28H88V23Z" fill="#2A1C2D"/><rect x="66" y="32" width="28" height="14" rx="4" fill="#E6BE6A"/><rect x="52" y="46" width="56" height="92" rx="14" fill="#FFF" stroke="#6E2468" stroke-opacity="0.15" stroke-width="2"/><rect x="57" y="52" width="46" height="80" rx="10" fill="${accent}"/><rect x="61" y="76" width="38" height="34" rx="6" fill="#FFF" fill-opacity="0.92"/><text x="80" y="92" text-anchor="middle" fill="#6E2468" font-size="9.5" font-weight="900">QWAREER</text><text x="80" y="103" text-anchor="middle" fill="#D22F7C" font-size="7.5" font-weight="800">MATTE HD</text></svg>`,
+        blush: `<svg viewBox="0 0 160 160" class="w-28 h-28 drop-shadow-md" fill="none"><ellipse cx="80" cy="138" rx="42" ry="8" fill="#D22F7C" fill-opacity="0.14"/><circle cx="80" cy="84" r="46" fill="#6E2468"/><circle cx="80" cy="84" r="39" fill="#FAF7FB"/><circle cx="80" cy="84" r="33" fill="${accent}"/><path d="M58 68C66 56 88 54 98 64" stroke="#FFF" stroke-opacity="0.35" stroke-width="5" stroke-linecap="round"/></svg>`,
+        mascara: `<svg viewBox="0 0 160 160" class="w-28 h-28 drop-shadow-md" fill="none"><ellipse cx="80" cy="140" rx="34" ry="7" fill="#6E2468" fill-opacity="0.12"/><rect x="48" y="36" width="26" height="100" rx="11" fill="#6E2468"/><rect x="48" y="36" width="26" height="28" rx="8" fill="#D22F7C"/><rect x="96" y="26" width="16" height="38" rx="6" fill="#1F1624"/><rect x="102" y="64" width="4" height="36" fill="#1F1624"/><rect x="95" y="98" width="18" height="32" rx="9" fill="#1F1624"/><path d="M91 104H117M90 110H118M90 116H118M91 122H117" stroke="#1F1624" stroke-width="2.5" stroke-linecap="round"/></svg>`,
+        eyeshadow: `<svg viewBox="0 0 160 160" class="w-28 h-28 drop-shadow-md" fill="none"><ellipse cx="80" cy="138" rx="52" ry="7" fill="#6E2468" fill-opacity="0.12"/><rect x="20" y="38" width="120" height="90" rx="14" fill="#6E2468"/><rect x="26" y="44" width="108" height="78" rx="10" fill="#FAF7FB"/><rect x="32" y="50" width="20" height="19" rx="4" fill="#F4D7C8"/><rect x="57" y="50" width="20" height="19" rx="4" fill="#E3A5A8"/><rect x="82" y="50" width="20" height="19" rx="4" fill="#C9738B"/><rect x="107" y="50" width="20" height="19" rx="4" fill="#8B3568"/><rect x="32" y="74" width="20" height="19" rx="4" fill="#E9BE9F"/><rect x="57" y="74" width="20" height="19" rx="4" fill="#D58E76"/><rect x="82" y="74" width="20" height="19" rx="4" fill="#A672B1"/><rect x="107" y="74" width="20" height="19" rx="4" fill="#6E2468"/><rect x="32" y="98" width="20" height="19" rx="4" fill="#F2C88B"/><rect x="57" y="98" width="20" height="19" rx="4" fill="#B87654"/><rect x="82" y="98" width="20" height="19" rx="4" fill="#7C443E"/><rect x="107" y="98" width="20" height="19" rx="4" fill="#3D2234"/></svg>`,
+        perfume_oud: `<svg viewBox="0 0 160 160" class="w-28 h-28 drop-shadow-md" fill="none"><ellipse cx="80" cy="142" rx="40" ry="7" fill="#6E2468" fill-opacity="0.14"/><rect x="62" y="20" width="36" height="24" rx="6" fill="#51164C"/><rect x="70" y="44" width="20" height="10" fill="#E6BE6A"/><rect x="40" y="54" width="80" height="84" rx="18" fill="#FFF" stroke="#6E2468" stroke-opacity="0.2" stroke-width="2"/><rect x="47" y="61" width="66" height="70" rx="13" fill="#F2B866" fill-opacity="0.85"/><rect x="57" y="76" width="46" height="38" rx="7" fill="#FFF" fill-opacity="0.94"/><text x="80" y="93" text-anchor="middle" fill="#6E2468" font-size="10.5" font-weight="900">QWAREER</text><text x="80" y="106" text-anchor="middle" fill="#B07A28" font-size="7.5" font-weight="800">VANILLA OUD</text></svg>`,
+        perfume_floral: `<svg viewBox="0 0 160 160" class="w-28 h-28 drop-shadow-md" fill="none"><ellipse cx="80" cy="142" rx="38" ry="7" fill="#A672B1" fill-opacity="0.16"/><circle cx="80" cy="34" r="14" fill="#F4EBF7" stroke="#A672B1" stroke-width="2"/><rect x="71" y="46" width="18" height="10" fill="#E6BE6A"/><circle cx="80" cy="96" r="42" fill="#FDEAF4" stroke="#FFF" stroke-width="3"/><circle cx="80" cy="96" r="34" fill="#E88CB8" fill-opacity="0.45"/><circle cx="80" cy="96" r="21" fill="#FFF" fill-opacity="0.94"/><text x="80" y="94" text-anchor="middle" fill="#6E2468" font-size="8.5" font-weight="900">QWAREER</text><text x="80" y="105" text-anchor="middle" fill="#D22F7C" font-size="7.5" font-weight="800">FLEUR</text></svg>`,
+        perfume_men: `<svg viewBox="0 0 160 160" class="w-28 h-28 drop-shadow-md" fill="none"><ellipse cx="80" cy="142" rx="40" ry="7" fill="#1F1624" fill-opacity="0.16"/><rect x="64" y="20" width="32" height="24" rx="4" fill="#1F1624"/><rect x="71" y="44" width="18" height="8" fill="#D9A84E"/><rect x="42" y="52" width="76" height="86" rx="10" fill="#2A1F2D"/><rect x="54" y="76" width="52" height="36" rx="4" fill="#D9A84E" fill-opacity="0.15" stroke="#D9A84E" stroke-width="1.5"/><text x="80" y="92" text-anchor="middle" fill="#F6D58E" font-size="10" font-weight="900">AMBER</text><text x="80" y="104" text-anchor="middle" fill="#FFF" font-size="7.5" font-weight="700">FOR MEN</text></svg>`,
+        perfume_men_blue: `<svg viewBox="0 0 160 160" class="w-28 h-28 drop-shadow-md" fill="none"><ellipse cx="80" cy="142" rx="38" ry="7" fill="#0369A1" fill-opacity="0.15"/><rect x="65" y="20" width="30" height="24" rx="5" fill="#0F172A"/><rect x="72" y="44" width="16" height="8" fill="#CBD5E1"/><rect x="44" y="52" width="72" height="86" rx="14" fill="#E0F2FE" stroke="#0284C7" stroke-opacity="0.3" stroke-width="2"/><rect x="50" y="58" width="60" height="74" rx="10" fill="#38BDF8" fill-opacity="0.55"/><rect x="56" y="78" width="48" height="34" rx="6" fill="#FFF" fill-opacity="0.92"/><text x="80" y="93" text-anchor="middle" fill="#0369A1" font-size="10" font-weight="900">AQUA</text><text x="80" y="104" text-anchor="middle" fill="#0F172A" font-size="7.5" font-weight="800">SPORT</text></svg>`,
+        bodymist: `<svg viewBox="0 0 160 160" class="w-28 h-28 drop-shadow-md" fill="none"><ellipse cx="80" cy="142" rx="30" ry="7" fill="#D22F7C" fill-opacity="0.14"/><rect x="64" y="18" width="32" height="26" rx="8" fill="#F9D5E5" stroke="#D22F7C" stroke-opacity="0.3"/><rect x="54" y="44" width="52" height="94" rx="16" fill="#E8569C"/><rect x="61" y="74" width="38" height="38" rx="8" fill="#FFF" fill-opacity="0.92"/><text x="80" y="91" text-anchor="middle" fill="#D22F7C" font-size="9.5" font-weight="900">ROSE</text><text x="80" y="103" text-anchor="middle" fill="#6E2468" font-size="7.5" font-weight="800">& BERRY</text></svg>`,
+        bodymist_gold: `<svg viewBox="0 0 160 160" class="w-28 h-28 drop-shadow-md" fill="none"><ellipse cx="80" cy="142" rx="30" ry="7" fill="#D97706" fill-opacity="0.14"/><rect x="64" y="18" width="32" height="26" rx="8" fill="#FEF3C7" stroke="#D97706" stroke-opacity="0.3"/><rect x="54" y="44" width="52" height="94" rx="16" fill="#F6C873"/><rect x="61" y="74" width="38" height="38" rx="8" fill="#FFF" fill-opacity="0.94"/><text x="80" y="91" text-anchor="middle" fill="#B45309" font-size="9" font-weight="900">VANILLA</text><text x="80" y="103" text-anchor="middle" fill="#6E2468" font-size="7.5" font-weight="800">SHIMMER</text></svg>`,
+        cleanser: `<svg viewBox="0 0 160 160" class="w-28 h-28 drop-shadow-md" fill="none"><ellipse cx="80" cy="142" rx="34" ry="7" fill="#0284C7" fill-opacity="0.12"/><rect x="70" y="20" width="20" height="12" rx="4" fill="#FFF" stroke="#94A3B8"/><path d="M88 23H104C106 23 107 26 105 28H88V23Z" fill="#FFF" stroke="#94A3B8"/><rect x="66" y="32" width="28" height="12" rx="4" fill="#A672B1"/><rect x="48" y="44" width="64" height="94" rx="16" fill="#7DD3FC"/><rect x="57" y="70" width="46" height="44" rx="8" fill="#FFF" fill-opacity="0.95"/><text x="80" y="89" text-anchor="middle" fill="#0369A1" font-size="9.5" font-weight="900">HYALURONIC</text><text x="80" y="102" text-anchor="middle" fill="#6E2468" font-size="7.5" font-weight="800">CLEANSER</text></svg>`,
+        toner: `<svg viewBox="0 0 160 160" class="w-28 h-28 drop-shadow-md" fill="none"><ellipse cx="80" cy="142" rx="30" ry="7" fill="#A672B1" fill-opacity="0.14"/><rect x="66" y="22" width="28" height="22" rx="6" fill="#6E2468"/><rect x="54" y="44" width="52" height="94" rx="14" fill="#E9D5FF"/><rect x="60" y="74" width="40" height="40" rx="8" fill="#FFF" fill-opacity="0.94"/><text x="80" y="91" text-anchor="middle" fill="#6E2468" font-size="9.5" font-weight="900">TONER</text><text x="80" y="103" text-anchor="middle" fill="#D22F7C" font-size="7.5" font-weight="800">B3 GLOW</text></svg>`,
+        serum: `<svg viewBox="0 0 160 160" class="w-28 h-28 drop-shadow-md" fill="none"><ellipse cx="80" cy="142" rx="32" ry="7" fill="#EA580C" fill-opacity="0.15"/><rect x="72" y="18" width="16" height="22" rx="8" fill="#FFF" stroke="#6E2468" stroke-opacity="0.2" stroke-width="2"/><rect x="65" y="38" width="30" height="12" rx="4" fill="#E6BE6A"/><rect x="52" y="50" width="56" height="88" rx="14" fill="#FB923C"/><rect x="58" y="74" width="44" height="44" rx="8" fill="#FFF" fill-opacity="0.95"/><text x="80" y="93" text-anchor="middle" fill="#EA580C" font-size="11.5" font-weight="900">VIT C</text><text x="80" y="106" text-anchor="middle" fill="#6E2468" font-size="7.5" font-weight="800">GLOW SERUM</text></svg>`,
+        serum_blue: `<svg viewBox="0 0 160 160" class="w-28 h-28 drop-shadow-md" fill="none"><ellipse cx="80" cy="142" rx="32" ry="7" fill="#0284C7" fill-opacity="0.15"/><rect x="72" y="18" width="16" height="22" rx="8" fill="#FFF" stroke="#0284C7" stroke-opacity="0.25" stroke-width="2"/><rect x="65" y="38" width="30" height="12" rx="4" fill="#94A3B8"/><rect x="52" y="50" width="56" height="88" rx="14" fill="#38BDF8"/><rect x="58" y="74" width="44" height="44" rx="8" fill="#FFF" fill-opacity="0.95"/><text x="80" y="93" text-anchor="middle" fill="#0369A1" font-size="11" font-weight="900">HA 2%</text><text x="80" y="106" text-anchor="middle" fill="#6E2468" font-size="7.5" font-weight="800">HYDRA SERUM</text></svg>`,
+        sunblock: `<svg viewBox="0 0 160 160" class="w-28 h-28 drop-shadow-md" fill="none"><ellipse cx="80" cy="142" rx="32" ry="7" fill="#F59E0B" fill-opacity="0.15"/><path d="M48 26H112L102 118H58L48 26Z" fill="#FDE68A" stroke="#F59E0B" stroke-opacity="0.35" stroke-width="2"/><rect x="64" y="118" width="32" height="20" rx="5" fill="#FFF" stroke="#CBD5E1" stroke-width="2"/><circle cx="80" cy="60" r="15" fill="#F59E0B" fill-opacity="0.22"/><text x="80" y="65" text-anchor="middle" fill="#B45309" font-size="12" font-weight="900">50+</text><text x="80" y="92" text-anchor="middle" fill="#6E2468" font-size="9.5" font-weight="900">SPF FLUID</text></svg>`,
+        cream: `<svg viewBox="0 0 160 160" class="w-28 h-28 drop-shadow-md" fill="none"><ellipse cx="80" cy="138" rx="44" ry="7" fill="#6E2468" fill-opacity="0.14"/><rect x="42" y="48" width="76" height="22" rx="7" fill="#6E2468"/><rect x="38" y="68" width="84" height="64" rx="18" fill="#FFF" stroke="#A672B1" stroke-opacity="0.35" stroke-width="2"/><rect x="46" y="76" width="68" height="48" rx="12" fill="#F4EBF7"/><text x="80" y="98" text-anchor="middle" fill="#6E2468" font-size="10" font-weight="900">COLLAGEN</text><text x="80" y="111" text-anchor="middle" fill="#D22F7C" font-size="7.5" font-weight="800">NIGHT CREAM</text></svg>`
+      };
+      return svgs[svgType] || svgs.lipstick;
+    }
+
+    /**
+     * =========================================================================
+     * 5. LANGUAGE & SPA NAVIGATION CONTROLLERS
+     * =========================================================================
+     */
+    function applyLanguageDirection() {
+      const isAr = appState.lang === 'ar';
+      document.documentElement.lang = isAr ? 'ar' : 'en';
+      document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+      document.title = isAr
+        ? 'قوارير | Qwareer — متجر الميكب والبرفانات والعناية بالبشرة'
+        : 'Qwareer | قوارير — Makeup, Perfumes & Skincare Store';
+    }
+
+    function toggleLanguage() {
+      appState.lang = appState.lang === 'ar' ? 'en' : 'ar';
+      persistState();
+      applyLanguageDirection();
+      renderApp();
+    }
+
+    function navigateTo(page, mainCat = null, subCat = null, adminTab = null) {
+      appState.page = page;
+      if (mainCat !== null) appState.activeMainCat = mainCat;
+      if (subCat !== null) appState.activeSubCat = subCat;
+      if (adminTab !== null) appState.adminTab = adminTab;
+
+      closeCategoriesDropdown();
+      toggleMobileNav(false);
+      renderApp();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleCategoriesDropdown() {
+      const wrap = document.getElementById('categoriesDropdownWrap');
+      wrap.classList.toggle('is-open');
+    }
+
+    function closeCategoriesDropdown() {
+      const wrap = document.getElementById('categoriesDropdownWrap');
+      if (wrap) wrap.classList.remove('is-open');
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', e => {
+      const wrap = document.getElementById('categoriesDropdownWrap');
+      if (wrap && !wrap.contains(e.target)) {
+        wrap.classList.remove('is-open');
+      }
+    });
+
+    function toggleMobileNav(open) {
+      const overlay = document.getElementById('mobileNavOverlay');
+      const panel = document.getElementById('mobileNavPanel');
+      if (open) {
+        renderMobileNavDrawer();
+        overlay.classList.remove('hidden');
+        requestAnimationFrame(() => panel.classList.remove('drawer-closed'));
+      } else {
+        panel.classList.add('drawer-closed');
+        setTimeout(() => overlay.classList.add('hidden'), 260);
+      }
+    }
+
+    function toggleMobileAccordion(catId) {
+      appState.mobileOpenCatId = appState.mobileOpenCatId === catId ? null : catId;
+      renderMobileNavDrawer();
+    }
+
+    /**
+     * =========================================================================
+     * 6. HEADER, NESTED FLYOUT MENU, MOBILE DRAWER & FOOTER RENDERING
+     * =========================================================================
+     */
+    function renderHeaderAndChrome() {
+      const isAr = appState.lang === 'ar';
+      const chevronDir = isAr ? 'chevron-left' : 'chevron-right';
+
+      document.getElementById('topPromoStrip').textContent = t('topPromo');
+      document.getElementById('brandNameMain').textContent = t('brandMain');
+      document.getElementById('brandNameSub').textContent = t('brandSub');
+      document.getElementById('headerLangLabel').textContent = t('langSwitch');
+      document.getElementById('adminLangLabel').textContent = t('langSwitch');
+      document.getElementById('adminBackToStoreLabel').textContent = t('backToStore');
+      document.getElementById('navCategoriesLabel').textContent = t('navCategories');
+      document.getElementById('navAdminLabel').textContent = t('navAdmin');
+      document.getElementById('navCartLabel').textContent = t('navCart');
+
+      // Active Nav Links
+      const homeBtn = document.getElementById('navLinkHome');
+      const storeBtn = document.getElementById('navLinkStore');
+      homeBtn.textContent = t('navHome');
+      storeBtn.textContent = t('navStore');
+
+      homeBtn.className = `px-4 py-2.5 rounded-xl text-sm font-extrabold transition-all ${
+        appState.page === 'home' ? 'bg-lavender-soft text-plum' : 'text-ink/80 hover:text-plum hover:bg-canvas'
+      }`;
+      storeBtn.className = `px-4 py-2.5 rounded-xl text-sm font-extrabold transition-all ${
+        appState.page === 'store' ? 'bg-lavender-soft text-plum' : 'text-ink/80 hover:text-plum hover:bg-canvas'
+      }`;
+
+      // Badges
+      const newOrdersCount = appState.orders.filter(o => o.status === 'new').length;
+      const cartQty = appState.cart.reduce((s, item) => s + item.qty, 0);
+      document.getElementById('navAdminBadge').textContent = newOrdersCount;
+      document.getElementById('navCartCount').textContent = cartQty;
+
+      // Render Nested Categories Dropdown with Side Flyout Sub-Categories
+      const menuEl = document.getElementById('nestedCategoriesMenu');
+      menuEl.innerHTML = `
+        <button
+          onclick="navigateTo('store', 'all', 'all')"
+          class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-extrabold text-plum bg-lavender-soft/70 hover:bg-lavender-soft transition-colors"
+        >
+          <span>${t('viewAllProducts')}</span>
+          <span class="px-2 py-0.5 rounded-lg bg-white text-[11px] font-black text-plum">${appState.products.length}</span>
+        </button>
+        <div class="border-t border-plum/10 my-1"></div>
+        ${appState.categories.map(cat => {
+          const catCount = appState.products.filter(p => p.categoryId === cat.id).length;
+          return `
+            <div class="relative main-cat-item group">
+              <button
+                onclick="navigateTo('store', '${cat.id}', 'all')"
+                class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-bold text-ink hover:bg-lavender-soft/60 hover:text-plum transition-colors"
+              >
+                <span class="flex items-center gap-2.5">
+                  <span class="w-8 h-8 rounded-lg bg-canvas group-hover:bg-white text-magenta flex items-center justify-center shrink-0">
+                    <i data-lucide="${cat.icon || 'sparkles'}" class="w-4 h-4"></i>
+                  </span>
+                  <span>${loc(cat.name)}</span>
+                </span>
+                <span class="flex items-center gap-1.5 text-ink/45 group-hover:text-magenta">
+                  <span class="text-[11px] font-bold">${catCount}</span>
+                  <i data-lucide="${chevronDir}" class="w-4 h-4"></i>
+                </span>
+              </button>
+
+              <!-- SIDE FLYOUT MENU FOR SUB-CATEGORIES -->
+              <div class="sub-flyout-panel absolute w-60 z-50">
+                <div class="bg-white rounded-2xl shadow-flyout border border-plum/15 p-2 space-y-1">
+                  <button
+                    onclick="navigateTo('store', '${cat.id}', 'all')"
+                    class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-extrabold text-plum bg-lavender-soft/60 hover:bg-lavender-soft transition-colors"
+                  >
+                    <span>${t('viewAllIn')} ${loc(cat.name)}</span>
+                    <span class="text-[11px]">${catCount}</span>
+                  </button>
+                  <div class="border-t border-plum/10 my-1"></div>
+                  ${cat.subCategories.map(sub => {
+                    const subCount = appState.products.filter(p => p.categoryId === cat.id && p.subCategoryId === sub.id).length;
+                    return `
+                      <button
+                        onclick="navigateTo('store', '${cat.id}', '${sub.id}')"
+                        class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-ink/80 hover:bg-canvas hover:text-magenta transition-colors"
+                      >
+                        <span class="flex items-center gap-2">
+                          <span class="w-1.5 h-1.5 rounded-full bg-magenta"></span>
+                          <span>${loc(sub.name)}</span>
+                        </span>
+                        <span class="px-1.5 py-0.5 rounded-md bg-canvas text-[10px] font-extrabold text-plum">${subCount}</span>
+                      </button>
+                    `;
+                  }).join('')}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      `;
+
+      // Render Footer
+      document.getElementById('storeFooter').innerHTML = `
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pb-8 border-b border-plum/10">
+            <div class="md:col-span-5 space-y-3">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10">${getQwareerLogoSVG('qLogoFooter')}</div>
+                <div>
+                  <p class="font-black text-plum text-lg leading-tight">${t('brandMain')}</p>
+                  <p class="text-[11px] font-extrabold text-magenta uppercase tracking-wider">${t('brandSub')}</p>
+                </div>
+              </div>
+              <p class="text-xs sm:text-sm text-ink/65 max-w-sm leading-relaxed">${t('footerDesc')}</p>
+            </div>
+
+            <div class="md:col-span-3 space-y-2.5">
+              <h4 class="font-extrabold text-sm text-ink">${t('footerQuickLinks')}</h4>
+              <ul class="space-y-2 text-xs sm:text-sm text-ink/70 font-semibold">
+                <li><button onclick="navigateTo('home')" class="hover:text-magenta transition-colors">${t('navHome')}</button></li>
+                <li><button onclick="navigateTo('store', 'all', 'all')" class="hover:text-magenta transition-colors">${t('navStore')}</button></li>
+                <li><button onclick="navigateTo('admin')" class="hover:text-magenta transition-colors">${t('navAdmin')}</button></li>
+              </ul>
+            </div>
+
+            <div class="md:col-span-4 space-y-3">
+              <h4 class="font-extrabold text-sm text-ink">${t('footerContact')}</h4>
+              <a
+                href="https://wa.me/201000000000"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#25D366] hover:bg-[#1EBE5D] text-white font-extrabold text-xs sm:text-sm shadow-xs transition-all"
+              >
+                <i data-lucide="message-circle" class="w-4 h-4"></i>
+                <span>${t('footerWhatsapp')}</span>
+              </a>
+              <p class="text-xs text-ink/55 flex items-center gap-1.5">
+                <i data-lucide="banknote" class="w-4 h-4 text-plum"></i>
+                <span>${t('codTitle')}</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="pt-6 text-center text-xs font-bold text-ink/50">
+            ${t('footerRights')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderMobileNavDrawer() {
+      const panel = document.getElementById('mobileNavPanel');
+      panel.innerHTML = `
+        <div class="flex items-center justify-between px-5 py-4 border-b border-plum/10 bg-canvas">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9">${getQwareerLogoSVG('qLogoMob')}</div>
+            <span class="font-black text-plum text-base">${t('brandMain')}</span>
+          </div>
+          <button onclick="toggleMobileNav(false)" class="p-2 rounded-xl hover:bg-plum/10 text-ink/70">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-4 space-y-2">
+          <button onclick="navigateTo('home')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-extrabold text-sm ${
+            appState.page === 'home' ? 'bg-lavender-soft text-plum' : 'text-ink hover:bg-canvas'
+          }">
+            <i data-lucide="home" class="w-4 h-4 text-magenta"></i>
+            <span>${t('navHome')}</span>
+          </button>
+
+          <button onclick="navigateTo('store', 'all', 'all')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-extrabold text-sm ${
+            appState.page === 'store' && appState.activeMainCat === 'all' ? 'bg-lavender-soft text-plum' : 'text-ink hover:bg-canvas'
+          }">
+            <i data-lucide="shopping-bag" class="w-4 h-4 text-magenta"></i>
+            <span>${t('navStore')} (${appState.products.length})</span>
+          </button>
+
+          <!-- Nested Categories Accordion -->
+          <div class="pt-2 border-t border-plum/10">
+            <p class="px-4 text-[11px] font-extrabold text-ink/50 uppercase mb-2">${t('navCategories')}</p>
+            <div class="space-y-1.5">
+              ${appState.categories.map(cat => {
+                const isOpen = appState.mobileOpenCatId === cat.id;
+                return `
+                  <div class="rounded-2xl border border-plum/10 overflow-hidden bg-canvas/60">
+                    <div class="flex items-center justify-between px-3 py-2.5">
+                      <button onclick="navigateTo('store', '${cat.id}', 'all')" class="flex items-center gap-2.5 font-extrabold text-sm text-plum flex-1 text-start">
+                        <i data-lucide="${cat.icon || 'sparkles'}" class="w-4 h-4 text-magenta"></i>
+                        <span>${loc(cat.name)}</span>
+                      </button>
+                      <button onclick="toggleMobileAccordion('${cat.id}')" class="p-1.5 rounded-lg bg-white border border-plum/10 text-plum">
+                        <i data-lucide="${isOpen ? 'chevron-up' : 'chevron-down'}" class="w-4 h-4"></i>
+                      </button>
+                    </div>
+                    ${isOpen ? `
+                      <div class="px-3 pb-3 pt-1 space-y-1 bg-white border-t border-plum/10">
+                        <button onclick="navigateTo('store', '${cat.id}', 'all')" class="w-full text-start px-3 py-2 rounded-xl text-xs font-extrabold text-plum bg-lavender-soft/60">
+                          ${t('viewAllIn')} ${loc(cat.name)}
+                        </button>
+                        ${cat.subCategories.map(sub => `
+                          <button onclick="navigateTo('store', '${cat.id}', '${sub.id}')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-ink/80 hover:bg-canvas">
+                            <span>• ${loc(sub.name)}</span>
+                            <span class="text-[10px] font-extrabold text-plum">${appState.products.filter(p => p.categoryId === cat.id && p.subCategoryId === sub.id).length}</span>
+                          </button>
+                        `).join('')}
+                      </div>
+                    ` : ''}
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4 border-t border-plum/10 space-y-2 bg-canvas">
+          <button onclick="navigateTo('admin')" class="w-full py-2.5 rounded-xl bg-plum text-white font-extrabold text-xs flex items-center justify-center gap-2">
+            <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+            <span>${t('navAdmin')}</span>
+          </button>
+        </div>
+      `;
+      lucide.createIcons();
+    }
+
+    /**
+     * =========================================================================
+     * 7. PRODUCT CARD COMPONENT (REUSED ON HOME & STORE PAGES)
+     * =========================================================================
+     */
+    function buildProductCardHTML(product) {
+      const activeIdx = appState.selectedVariants[product.id] || 0;
+      const safeIdx = activeIdx < product.variants.length ? activeIdx : 0;
+      const activeVariant = product.variants[safeIdx];
+      const accentColor = activeVariant.color || '#D22F7C';
+      const mainCat = getCategory(product.categoryId);
+      const subCat = getSubCategory(product.categoryId, product.subCategoryId);
+
+      let variantUI = '';
+      if (product.variantType === 'swatch') {
+        variantUI = `
+          <div class="mt-3">
+            <div class="flex items-center justify-between text-[11px] mb-1.5">
+              <span class="text-ink/55 font-semibold">${t('shadeLabel')}</span>
+              <span class="font-bold text-plum">${loc(activeVariant.label)}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              ${product.variants.map((v, i) => `
+                <button
+                  onclick="selectProductVariant('${product.id}', ${i})"
+                  title="${loc(v.label)}"
+                  class="w-6 h-6 rounded-full transition-transform ${
+                    i === safeIdx ? 'ring-2 ring-offset-2 ring-plum scale-110' : 'opacity-85 hover:scale-105'
+                  }"
+                  style="background-color: ${v.color || '#D22F7C'};"
+                ></button>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      } else {
+        variantUI = `
+          <div class="mt-3 flex flex-wrap gap-1.5">
+            ${product.variants.map((v, i) => `
+              <button
+                onclick="selectProductVariant('${product.id}', ${i})"
+                class="px-2.5 py-1 rounded-lg text-[11px] font-bold border transition-all ${
+                  i === safeIdx
+                    ? 'bg-lavender-soft border-plum text-plum'
+                    : 'bg-canvas border-plum/15 text-ink/65 hover:border-plum/40'
+                }"
+              >${loc(v.label)}</button>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      return `
+        <article class="group bg-white rounded-3xl border border-plum/10 shadow-card hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden">
+          <div class="relative h-48 bg-gradient-to-br from-canvas via-lavender-soft/75 to-pink-50/80 flex items-center justify-center p-4">
+            <div class="absolute top-3 inset-x-3 flex items-center justify-between gap-2">
+              <span class="px-2.5 py-1 rounded-xl text-[10px] font-extrabold bg-magenta text-white shadow-xs shrink-0">
+                ${loc(product.badge)}
+              </span>
+              <span class="px-2.5 py-1 rounded-xl text-[10px] font-extrabold bg-white/90 text-plum border border-plum/10 truncate">
+                ${loc(mainCat?.name)} › ${loc(subCat?.name)}
+              </span>
+            </div>
+            <div class="mt-4 transform group-hover:scale-105 transition-transform duration-300">
+              ${getProductSVG(product.svgType, accentColor)}
+            </div>
+          </div>
+
+          <div class="p-4 sm:p-5 flex-1 flex flex-col justify-between">
+            <div>
+              <h3 class="font-extrabold text-sm sm:text-base text-ink group-hover:text-plum transition-colors leading-snug">
+                ${loc(product.name)}
+              </h3>
+              <p class="text-xs text-ink/60 mt-1 line-clamp-2 leading-relaxed">
+                ${loc(product.description)}
+              </p>
+              ${variantUI}
+            </div>
+
+            <div class="mt-4 pt-3.5 border-t border-plum/10 flex items-center justify-between gap-2">
+              <div>
+                <span class="text-lg font-black text-plum">${activeVariant.price}</span>
+                <span class="text-xs font-bold text-ink/60">${t('currency')}</span>
+              </div>
+              <button
+                onclick="addToCart('${product.id}')"
+                class="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-plum hover:bg-magenta text-white font-extrabold text-xs shadow-xs active:scale-95 transition-all"
+              >
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                <span>${t('addToCart')}</span>
+              </button>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function selectProductVariant(productId, idx) {
+      appState.selectedVariants[productId] = idx;
+      if (appState.page === 'home') renderHomePage();
+      if (appState.page === 'store') renderStorePage();
+    }
+
+    /**
+     * =========================================================================
+     * 8. PAGE A: HOME PAGE RENDERER
+     * =========================================================================
+     */
+    function renderHomePage() {
+      const container = document.getElementById('homePageView');
+      const bestSellers = [...appState.products]
+        .sort((a, b) => (b.salesCount || 0) - (a.salesCount || 0))
+        .slice(0, 8);
+
+      const arrowIcon = appState.lang === 'ar' ? 'arrow-left' : 'arrow-right';
+
+      container.innerHTML = `
+        <!-- LUXURY HERO SECTION -->
+        <section class="relative overflow-hidden bg-gradient-to-bl from-plum via-[#83256E] to-magenta text-white">
+          <div class="absolute -top-24 -end-16 w-80 h-80 rounded-[48px] rotate-45 bg-white/5 border border-white/10 pointer-events-none"></div>
+          <div class="absolute -bottom-16 start-1/4 w-64 h-64 rounded-[40px] rotate-45 bg-lavender/20 blur-2xl pointer-events-none"></div>
+
+          <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+            <div class="grid lg:grid-cols-12 gap-8 items-center">
+              <div class="lg:col-span-7 text-center lg:text-start space-y-5">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 text-xs font-bold">
+                  <span class="w-2 h-2 rounded-full bg-pink-200 animate-pulse"></span>
+                  <span>${t('heroBadge')}</span>
+                </div>
+
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black leading-tight">
+                  ${t('heroTitle1')}
+                  <span class="block text-pink-200 mt-1">${t('heroTitle2')}</span>
+                </h1>
+
+                <p class="text-white/90 text-sm sm:text-base max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                  ${t('heroSubtitle')}
+                </p>
+
+                <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2">
+                  <button
+                    onclick="navigateTo('store', 'all', 'all')"
+                    class="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl bg-white text-plum font-black text-sm shadow-lg hover:bg-canvas active:scale-95 transition-all"
+                  >
+                    <span>${t('heroCtaShop')}</span>
+                    <i data-lucide="${arrowIcon}" class="w-4 h-4"></i>
+                  </button>
+
+                  <a
+                    href="#homeBestSellers"
+                    class="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-white/15 hover:bg-white/25 border border-white/25 text-white font-extrabold text-sm transition-all"
+                  >
+                    <i data-lucide="sparkles" class="w-4 h-4"></i>
+                    <span>${t('heroCtaBest')}</span>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Hero Brand Showcase Card -->
+              <div class="lg:col-span-5 hidden sm:flex justify-center">
+                <div class="relative bg-white/12 backdrop-blur-md border border-white/20 rounded-3xl p-6 w-full max-w-md shadow-2xl">
+                  <div class="grid grid-cols-3 gap-3">
+                    <div class="bg-white/95 rounded-2xl p-3 flex flex-col items-center text-ink">
+                      <div class="scale-75 -my-3">${getProductSVG('lipstick', '#D22F7C')}</div>
+                      <span class="text-[11px] font-extrabold text-plum mt-1">${loc(appState.categories[0]?.name)}</span>
+                    </div>
+                    <div class="bg-white/95 rounded-2xl p-3 flex flex-col items-center text-ink">
+                      <div class="scale-75 -my-3">${getProductSVG('perfume_oud')}</div>
+                      <span class="text-[11px] font-extrabold text-plum mt-1">${loc(appState.categories[1]?.name)}</span>
+                    </div>
+                    <div class="bg-white/95 rounded-2xl p-3 flex flex-col items-center text-ink">
+                      <div class="scale-75 -my-3">${getProductSVG('serum')}</div>
+                      <span class="text-[11px] font-extrabold text-plum mt-1">${loc(appState.categories[2]?.name)}</span>
+                    </div>
+                  </div>
+                  <div class="mt-4 pt-4 border-t border-white/20 flex items-center justify-between text-xs font-bold text-white/90">
+                    <span class="flex items-center gap-1.5"><i data-lucide="truck" class="w-4 h-4 text-pink-200"></i> ${t('deliveryHome')}</span>
+                    <span class="px-2.5 py-1 rounded-lg bg-white/20">COD</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TRUST STRIP -->
+        <section class="bg-white border-b border-plum/10">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+              <div class="flex items-center gap-3.5 p-2 rounded-2xl">
+                <div class="w-11 h-11 rounded-2xl bg-lavender-soft text-plum flex items-center justify-center shrink-0">
+                  <i data-lucide="shield-check" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h3 class="font-extrabold text-sm text-ink">${t('trust1Title')}</h3>
+                  <p class="text-xs text-ink/60">${t('trust1Desc')}</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3.5 p-2 rounded-2xl">
+                <div class="w-11 h-11 rounded-2xl bg-pink-50 text-magenta flex items-center justify-center shrink-0">
+                  <i data-lucide="truck" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h3 class="font-extrabold text-sm text-ink">${t('trust2Title')}</h3>
+                  <p class="text-xs text-ink/60">${t('trust2Desc')}</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3.5 p-2 rounded-2xl">
+                <div class="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+                  <i data-lucide="banknote" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h3 class="font-extrabold text-sm text-ink">${t('trust3Title')}</h3>
+                  <p class="text-xs text-ink/60">${t('trust3Desc')}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SHOP BY CATEGORY SECTION (3 RICH CARDS WITH QUICK SUB-CATEGORY PILLS) -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div class="text-center max-w-2xl mx-auto mb-8">
+            <span class="text-xs font-extrabold text-magenta uppercase tracking-wider">${t('shopByCatEyebrow')}</span>
+            <h2 class="text-2xl sm:text-3xl font-black text-ink mt-1">${t('shopByCatTitle')}</h2>
+            <p class="text-xs sm:text-sm text-ink/60 mt-1.5">${t('shopByCatDesc')}</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            ${appState.categories.map(cat => {
+              const count = appState.products.filter(p => p.categoryId === cat.id).length;
+              return `
+                <div class="bg-white rounded-3xl border border-plum/10 shadow-card hover:shadow-xl transition-all overflow-hidden flex flex-col">
+                  <button
+                    onclick="navigateTo('store', '${cat.id}', 'all')"
+                    class="p-6 bg-gradient-to-l ${cat.gradient || 'from-plum to-magenta'} text-white text-start flex items-center justify-between group"
+                  >
+                    <div>
+                      <span class="inline-block px-2.5 py-0.5 rounded-lg bg-white/20 text-[11px] font-bold mb-2">
+                        ${count} ${t('productsCountUnit')}
+                      </span>
+                      <h3 class="text-xl font-black">${loc(cat.name)}</h3>
+                      <p class="text-xs text-white/80 mt-0.5">${cat.subCategories.length} ${t('subCategoriesCount')}</p>
+                    </div>
+                    <div class="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <i data-lucide="${cat.icon || 'sparkles'}" class="w-7 h-7 text-white"></i>
+                    </div>
+                  </button>
+
+                  <div class="p-5 flex-1 flex flex-col justify-between gap-4">
+                    <div class="flex flex-wrap gap-2">
+                      ${cat.subCategories.map(sub => `
+                        <button
+                          onclick="navigateTo('store', '${cat.id}', '${sub.id}')"
+                          class="px-3 py-1.5 rounded-xl bg-canvas hover:bg-magenta hover:text-white border border-plum/15 text-xs font-extrabold text-plum transition-all"
+                        >
+                          ${loc(sub.name)}
+                        </button>
+                      `).join('')}
+                    </div>
+
+                    <button
+                      onclick="navigateTo('store', '${cat.id}', 'all')"
+                      class="w-full py-2.5 rounded-xl bg-lavender-soft hover:bg-plum hover:text-white text-plum font-extrabold text-xs flex items-center justify-center gap-1.5 transition-all"
+                    >
+                      <span>${t('viewAllIn')} ${loc(cat.name)}</span>
+                      <i data-lucide="${arrowIcon}" class="w-3.5 h-3.5"></i>
+                    </button>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </section>
+
+        <!-- FEATURED / BEST SELLERS SECTION (8 TOP PRODUCTS) -->
+        <section id="homeBestSellers" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-7">
+            <div>
+              <span class="text-xs font-extrabold text-magenta uppercase tracking-wider">${t('bestSellersEyebrow')}</span>
+              <h2 class="text-2xl sm:text-3xl font-black text-ink mt-1">${t('bestSellersTitle')}</h2>
+            </div>
+            <button
+              onclick="navigateTo('store', 'all', 'all')"
+              class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white border border-plum/15 hover:border-magenta text-plum hover:text-magenta font-extrabold text-xs sm:text-sm transition-all self-start sm:self-auto"
+            >
+              <span>${t('viewFullStore')}</span>
+              <i data-lucide="${arrowIcon}" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            ${bestSellers.map(p => buildProductCardHTML(p)).join('')}
+          </div>
+        </section>
+
+        <!-- PROMOTIONAL BANNER (FREE DELIVERY OVER 1,000 EGP) -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <div class="relative overflow-hidden rounded-3xl bg-gradient-to-l from-plum via-[#7B246D] to-magenta text-white p-7 sm:p-10 shadow-glow">
+            <div class="absolute -bottom-12 -end-10 w-56 h-56 rounded-full bg-white/10 blur-xl pointer-events-none"></div>
+            <div class="relative flex flex-col md:flex-row items-center justify-between gap-6">
+              <div class="text-center md:text-start space-y-2 max-w-2xl">
+                <span class="inline-block px-3 py-1 rounded-full bg-white/20 text-xs font-extrabold">${t('promoBadge')}</span>
+                <h3 class="text-2xl sm:text-3xl font-black">${t('promoTitle')}</h3>
+                <p class="text-sm text-white/85">${t('promoDesc')}</p>
+              </div>
+              <button
+                onclick="navigateTo('store', 'all', 'all')"
+                class="shrink-0 px-7 py-3.5 rounded-2xl bg-white text-plum font-black text-sm shadow-lg hover:bg-canvas active:scale-95 transition-all"
+              >
+                ${t('promoBtn')}
+              </button>
+            </div>
+          </div>
+        </section>
+      `;
+
+      lucide.createIcons();
+    }
+
+    /**
+     * =========================================================================
+     * 9. PAGE B: STORE / SHOP PAGE RENDERER
+     * =========================================================================
+     */
+    function renderStorePage() {
+      const container = document.getElementById('storePageView');
+      const chevron = appState.lang === 'ar' ? 'chevron-left' : 'chevron-right';
+
+      const mainCatObj = appState.activeMainCat !== 'all' ? getCategory(appState.activeMainCat) : null;
+      const subCatObj = (mainCatObj && appState.activeSubCat !== 'all') ? getSubCategory(mainCatObj.id, appState.activeSubCat) : null;
+
+      // Filter & sort products
+      const q = appState.searchQuery.trim().toLowerCase();
+      let filtered = appState.products.filter(p => {
+        const matchMain = appState.activeMainCat === 'all' || p.categoryId === appState.activeMainCat;
+        const matchSub = appState.activeSubCat === 'all' || p.subCategoryId === appState.activeSubCat;
+        const matchSearch = !q ||
+          (p.name.ar || '').toLowerCase().includes(q) ||
+          (p.name.en || '').toLowerCase().includes(q) ||
+          (p.description.ar || '').toLowerCase().includes(q) ||
+          (p.description.en || '').toLowerCase().includes(q);
+        return matchMain && matchSub && matchSearch;
+      });
+
+      if (appState.sortBy === 'price-asc') {
+        filtered.sort((a, b) => a.variants[0].price - b.variants[0].price);
+      } else if (appState.sortBy === 'price-desc') {
+        filtered.sort((a, b) => b.variants[0].price - a.variants[0].price);
+      } else {
+        filtered.sort((a, b) => (b.salesCount || 0) - (a.salesCount || 0));
+      }
+
+      const hasFilters = appState.activeMainCat !== 'all' || q.length > 0;
+
+      container.innerHTML = `
+        <div class="space-y-6 animate-pop">
+          <!-- Dynamic Breadcrumb -->
+          <nav class="flex flex-wrap items-center gap-1.5 text-xs sm:text-sm font-bold text-ink/60">
+            <button onclick="navigateTo('home')" class="hover:text-plum transition-colors">${t('navHome')}</button>
+            <i data-lucide="${chevron}" class="w-4 h-4 opacity-50"></i>
+            <button onclick="setStoreFilter('all', 'all')" class="${!mainCatObj ? 'text-plum font-black' : 'hover:text-plum'}">${t('navStore')}</button>
+            ${mainCatObj ? `
+              <i data-lucide="${chevron}" class="w-4 h-4 opacity-50"></i>
+              <button onclick="setStoreFilter('${mainCatObj.id}', 'all')" class="${!subCatObj ? 'text-plum font-black' : 'hover:text-plum'}">${loc(mainCatObj.name)}</button>
+            ` : ''}
+            ${subCatObj ? `
+              <i data-lucide="${chevron}" class="w-4 h-4 opacity-50"></i>
+              <span class="text-magenta font-black">${loc(subCatObj.name)}</span>
+            ` : ''}
+          </nav>
+
+          <!-- Store Header + Search & Sort -->
+          <div class="bg-white rounded-3xl border border-plum/10 shadow-card p-5 sm:p-6 space-y-5">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+              <div>
+                <h1 class="text-2xl sm:text-3xl font-black text-ink">${mainCatObj ? loc(mainCatObj.name) : t('storeTitle')}</h1>
+                <p class="text-xs sm:text-sm text-ink/60 mt-0.5">${subCatObj ? loc(subCatObj.name) : t('storeSubtitle')}</p>
+              </div>
+
+              <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <!-- Search Input -->
+                <div class="relative flex-1 sm:w-64">
+                  <input
+                    type="text"
+                    id="storeSearchInput"
+                    value="${appState.searchQuery.replace(/"/g, '&quot;')}"
+                    oninput="handleStoreSearch(this.value)"
+                    placeholder="${t('searchPlaceholder')}"
+                    class="w-full bg-canvas border border-plum/15 focus:border-magenta focus:ring-2 focus:ring-magenta/20 rounded-xl py-2.5 ps-10 pe-4 text-sm outline-none"
+                  />
+                  <i data-lucide="search" class="w-4 h-4 text-plum/60 absolute start-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+                </div>
+
+                <!-- Sort Select -->
+                <div class="flex items-center gap-2">
+                  <label class="text-xs font-bold text-ink/60 shrink-0">${t('sortLabel')}</label>
+                  <select
+                    onchange="handleStoreSort(this.value)"
+                    class="bg-canvas border border-plum/15 rounded-xl px-3 py-2.5 text-xs sm:text-sm font-bold text-ink outline-none focus:border-magenta cursor-pointer"
+                  >
+                    <option value="featured" ${appState.sortBy === 'featured' ? 'selected' : ''}>${t('sortFeatured')}</option>
+                    <option value="price-asc" ${appState.sortBy === 'price-asc' ? 'selected' : ''}>${t('sortPriceAsc')}</option>
+                    <option value="price-desc" ${appState.sortBy === 'price-desc' ? 'selected' : ''}>${t('sortPriceDesc')}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Main Category Quick Filter Strip -->
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1">
+              <button
+                onclick="setStoreFilter('all', 'all')"
+                class="shrink-0 flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all ${
+                  appState.activeMainCat === 'all'
+                    ? 'bg-gradient-to-l from-plum to-magenta text-white shadow-glow'
+                    : 'bg-canvas text-ink/75 hover:bg-lavender-soft hover:text-plum border border-plum/10'
+                }"
+              >
+                <span>${t('allCategories')}</span>
+                <span class="px-1.5 py-0.5 rounded-md text-[10px] ${appState.activeMainCat === 'all' ? 'bg-white/20' : 'bg-white text-plum'}">${appState.products.length}</span>
+              </button>
+
+              ${appState.categories.map(cat => {
+                const active = appState.activeMainCat === cat.id;
+                const count = appState.products.filter(p => p.categoryId === cat.id).length;
+                return `
+                  <button
+                    onclick="setStoreFilter('${cat.id}', 'all')"
+                    class="shrink-0 flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all ${
+                      active
+                        ? 'bg-gradient-to-l from-plum to-magenta text-white shadow-glow'
+                        : 'bg-canvas text-ink/75 hover:bg-lavender-soft hover:text-plum border border-plum/10'
+                    }"
+                  >
+                    <span>${loc(cat.name)}</span>
+                    <span class="px-1.5 py-0.5 rounded-md text-[10px] ${active ? 'bg-white/20' : 'bg-white text-plum'}">${count}</span>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+
+            <!-- Sub-Category Quick Filter Strip (Shown when a Main Category is selected) -->
+            ${mainCatObj ? `
+              <div class="pt-3 border-t border-plum/10 flex flex-wrap items-center gap-2">
+                <button
+                  onclick="setStoreFilter('${mainCatObj.id}', 'all')"
+                  class="px-3.5 py-1.5 rounded-xl text-xs font-extrabold border transition-all ${
+                    appState.activeSubCat === 'all'
+                      ? 'bg-plum text-white border-plum'
+                      : 'bg-canvas text-ink/75 border-plum/15 hover:border-plum'
+                  }"
+                >${t('viewAllIn')} ${loc(mainCatObj.name)}</button>
+
+                ${mainCatObj.subCategories.map(sub => {
+                  const active = appState.activeSubCat === sub.id;
+                  const count = appState.products.filter(p => p.categoryId === mainCatObj.id && p.subCategoryId === sub.id).length;
+                  return `
+                    <button
+                      onclick="setStoreFilter('${mainCatObj.id}', '${sub.id}')"
+                      class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-extrabold border transition-all ${
+                        active
+                          ? 'bg-magenta text-white border-magenta'
+                          : 'bg-canvas text-ink/75 border-plum/15 hover:border-magenta hover:text-magenta'
+                      }"
+                    >
+                      <span>${loc(sub.name)}</span>
+                      <span class="text-[10px] opacity-80">(${count})</span>
+                    </button>
+                  `;
+                }).join('')}
+              </div>
+            ` : ''}
+          </div>
+
+          <!-- Active Filter Pill & Results Count -->
+          <div class="flex flex-wrap items-center justify-between gap-3 px-1">
+            <p class="text-xs sm:text-sm font-bold text-ink/70">
+              ${t('showingResults')} <span class="text-plum font-black">${filtered.length}</span> ${t('productsCountUnit')}
+              ${mainCatObj ? `${t('resultsIn')} <span class="text-magenta font-extrabold">${loc(mainCatObj.name)}${subCatObj ? ' › ' + loc(subCatObj.name) : ''}</span>` : ''}
+            </p>
+
+            ${hasFilters ? `
+              <button
+                onclick="clearStoreFilters()"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-pink-50 hover:bg-magenta hover:text-white text-magenta font-extrabold text-xs transition-all"
+              >
+                <i data-lucide="x-circle" class="w-3.5 h-3.5"></i>
+                <span>${t('clearFilters')}</span>
+              </button>
+            ` : ''}
+          </div>
+
+          <!-- Product Grid or Empty State -->
+          ${filtered.length === 0 ? `
+            <div class="text-center py-16 bg-white rounded-3xl border border-plum/10 shadow-card">
+              <div class="w-16 h-16 mx-auto rounded-2xl bg-lavender-soft text-plum flex items-center justify-center mb-4">
+                <i data-lucide="search-x" class="w-8 h-8"></i>
+              </div>
+              <h3 class="text-lg font-extrabold text-ink">${t('noProductsTitle')}</h3>
+              <p class="text-sm text-ink/60 mt-1 mb-5">${t('noProductsDesc')}</p>
+              <button onclick="clearStoreFilters()" class="px-6 py-2.5 rounded-xl bg-plum text-white font-extrabold text-sm hover:bg-plum-dark transition-all">
+                ${t('clearFilters')}
+              </button>
+            </div>
+          ` : `
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+              ${filtered.map(p => buildProductCardHTML(p)).join('')}
+            </div>
+          `}
+        </div>
+      `;
+
+      lucide.createIcons();
+    }
+
+    function setStoreFilter(mainId, subId) {
+      appState.activeMainCat = mainId;
+      appState.activeSubCat = subId;
+      renderStorePage();
+    }
+
+    function handleStoreSearch(val) {
+      appState.searchQuery = val;
+      renderStorePage();
+      const inp = document.getElementById('storeSearchInput');
+      if (inp) {
+        inp.focus();
+        inp.setSelectionRange(val.length, val.length);
+      }
+    }
+
+    function handleStoreSort(val) {
+      appState.sortBy = val;
+      renderStorePage();
+    }
+
+    function clearStoreFilters() {
+      appState.activeMainCat = 'all';
+      appState.activeSubCat = 'all';
+      appState.searchQuery = '';
+      appState.sortBy = 'featured';
+      renderStorePage();
+    }
+
+    /**
+     * =========================================================================
+     * 10. CART & CHECKOUT SLIDE-OVER DRAWER (WITH FREE SHIPPING OVER 1000 EGP)
+     * =========================================================================
+     */
+    function addToCart(productId) {
+      const product = appState.products.find(p => p.id === productId);
+      if (!product) return;
+      const variantIndex = appState.selectedVariants[productId] || 0;
+      const existing = appState.cart.find(item => item.productId === productId && item.variantIndex === variantIndex);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        appState.cart.push({ productId, variantIndex, qty: 1 });
+      }
+      persistState();
+      renderHeaderAndChrome();
+      showToast(`${t('addedToCartToast')}: ${loc(product.name)}`);
+    }
+
+    function updateCartQty(idx, delta) {
+      if (!appState.cart[idx]) return;
+      appState.cart[idx].qty += delta;
+      if (appState.cart[idx].qty <= 0) appState.cart.splice(idx, 1);
+      persistState();
+      renderHeaderAndChrome();
+      renderCartDrawer();
+    }
+
+    function removeCartItem(idx) {
+      appState.cart.splice(idx, 1);
+      persistState();
+      renderHeaderAndChrome();
+      renderCartDrawer();
+    }
+
+    function getCartSummary() {
+      let subtotal = 0;
+      let totalItems = 0;
+      appState.cart.forEach(item => {
+        const p = appState.products.find(x => x.id === item.productId);
+        if (p && p.variants[item.variantIndex]) {
+          subtotal += p.variants[item.variantIndex].price * item.qty;
+          totalItems += item.qty;
+        }
+      });
+
+      const areaObj = DELIVERY_AREAS.find(a => a.id === appState.deliveryAreaId) || DELIVERY_AREAS[0];
+      const qualifiesFreeShipping = subtotal >= 1000;
+      let deliveryFee = 0;
+      if (appState.cart.length > 0 && appState.deliveryMethod === 'delivery') {
+        deliveryFee = qualifiesFreeShipping ? 0 : areaObj.fee;
+      }
+
+      return {
+        subtotal,
+        totalItems,
+        deliveryFee,
+        total: subtotal + deliveryFee,
+        qualifiesFreeShipping,
+        areaObj
+      };
+    }
+
+    function toggleCartDrawer(open) {
+      const overlay = document.getElementById('cartOverlay');
+      const panel = document.getElementById('cartPanel');
+      if (open) {
+        if (appState.cartStep === 'success') appState.cartStep = 'cart';
+        renderCartDrawer();
+        overlay.classList.remove('hidden');
+        requestAnimationFrame(() => panel.classList.remove('cart-closed'));
+      } else {
+        panel.classList.add('cart-closed');
+        setTimeout(() => overlay.classList.add('hidden'), 260);
+      }
+    }
+
+    function setDeliveryMethod(method) {
+      appState.deliveryMethod = method;
+      renderCartDrawer();
+    }
+
+    function setDeliveryArea(areaId) {
+      appState.deliveryAreaId = areaId;
+      renderCartDrawer();
+    }
+
+    function setCartStep(step) {
+      appState.cartStep = step;
+      renderCartDrawer();
+    }
+
+    function renderCartDrawer() {
+      const panel = document.getElementById('cartPanel');
+      const { subtotal, totalItems, deliveryFee, total, qualifiesFreeShipping, areaObj } = getCartSummary();
+
+      // Header
+      let bodyHTML = '';
+      let footerHTML = '';
+
+      if (appState.cartStep === 'success' && appState.lastOrder) {
+        const ord = appState.lastOrder;
+        const waText = encodeURIComponent(
+          (appState.lang === 'ar'
+            ? `مرحباً متجر قوارير 🎀\nطلب جديد رقم: ${ord.id}\nالاسم: ${ord.customerName}\nالموبايل: ${ord.phone}\nالاستلام: ${loc(ord.deliveryArea)}\nالعنوان: ${ord.address}\nالمنتجات: ${ord.itemsSummary}\nالإجمالي (دفع عند الاستلام): ${ord.total} ج.م`
+            : `Hello Qwareer Store 🎀\nNew Order: ${ord.id}\nName: ${ord.customerName}\nPhone: ${ord.phone}\nDelivery: ${loc(ord.deliveryArea)}\nAddress: ${ord.address}\nItems: ${ord.itemsSummary}\nTotal (COD): ${ord.total} EGP`)
+        );
+
+        bodyHTML = `
+          <div class="text-center py-6 space-y-4 animate-pop">
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+              <i data-lucide="check-circle-2" class="w-10 h-10"></i>
+            </div>
+            <div>
+              <span class="inline-block px-3 py-1 rounded-full bg-lavender-soft text-plum text-xs font-extrabold mb-1.5">${t('orderConfirmedBadge')}</span>
+              <h3 class="text-xl font-black text-ink">${t('orderConfirmedTitle')}</h3>
+            </div>
+
+            <div class="bg-canvas border border-plum/15 rounded-2xl p-4 text-start space-y-2 text-xs">
+              <div class="flex items-center justify-between pb-2 border-b border-plum/10">
+                <span class="text-ink/60">${t('orderNumberLabel')}</span>
+                <div class="flex items-center gap-2">
+                  <span class="text-base font-black text-plum">${ord.id}</span>
+                  <button onclick="copyOrderId('${ord.id}')" class="px-2 py-1 rounded-lg bg-white border border-plum/15 text-[11px] font-bold text-plum hover:bg-lavender-soft">${t('copyBtn')}</button>
+                </div>
+              </div>
+              <div class="flex justify-between"><span class="text-ink/60">${t('deliveryTitle')}:</span><span class="font-bold text-ink">${loc(ord.deliveryArea)}</span></div>
+              <div class="flex justify-between"><span class="text-ink/60">${t('codTitle')}:</span><span class="font-bold text-emerald-700">COD</span></div>
+              <div class="flex justify-between pt-2 border-t border-plum/10 text-sm"><span class="font-extrabold text-ink">${t('total')}:</span><span class="font-black text-magenta">${ord.total} ${t('currency')}</span></div>
+            </div>
+
+            <div class="space-y-2.5 pt-2">
+              <a href="https://wa.me/201000000000?text=${waText}" target="_blank" rel="noopener noreferrer" class="w-full py-3 rounded-2xl bg-[#25D366] hover:bg-[#1EBE5D] text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-xs transition-all">
+                <i data-lucide="message-circle" class="w-5 h-5"></i>
+                <span>${t('sendWhatsappBtn')}</span>
+              </a>
+              <button onclick="toggleCartDrawer(false); navigateTo('admin', null, null, 'orders');" class="w-full py-3 rounded-2xl bg-lavender-soft hover:bg-plum hover:text-white text-plum font-extrabold text-sm flex items-center justify-center gap-2 transition-all">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                <span>${t('viewInAdminBtn')}</span>
+              </button>
+              <button onclick="toggleCartDrawer(false)" class="w-full py-2 text-xs font-bold text-ink/60 hover:text-ink">
+                ${t('continueShopping')}
+              </button>
+            </div>
+          </div>
+        `;
+      } else if (appState.cart.length === 0) {
+        bodyHTML = `
+          <div class="text-center py-14 space-y-3">
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-lavender-soft text-plum flex items-center justify-center">
+              <i data-lucide="shopping-cart" class="w-8 h-8"></i>
+            </div>
+            <h3 class="font-extrabold text-ink text-base">${t('cartEmptyTitle')}</h3>
+            <p class="text-xs text-ink/60 max-w-xs mx-auto">${t('cartEmptyDesc')}</p>
+            <button onclick="toggleCartDrawer(false); navigateTo('store', 'all', 'all');" class="mt-2 px-6 py-2.5 rounded-xl bg-plum text-white text-sm font-extrabold hover:bg-plum-dark transition-all">
+              ${t('cartBrowseBtn')}
+            </button>
+          </div>
+        `;
+      } else if (appState.cartStep === 'checkout') {
+        bodyHTML = `
+          <form id="drawerCheckoutForm" onsubmit="submitDrawerOrder(event)" class="space-y-4 animate-pop">
+            <button type="button" onclick="setCartStep('cart')" class="inline-flex items-center gap-1.5 text-xs font-extrabold text-plum hover:text-magenta">
+              <i data-lucide="${appState.lang === 'ar' ? 'arrow-right' : 'arrow-left'}" class="w-4 h-4"></i>
+              <span>${t('backToCart')}</span>
+            </button>
+
+            <div class="p-3.5 rounded-2xl bg-canvas border border-plum/10 flex items-center justify-between text-xs">
+              <div>
+                <span class="text-ink/60 block">${totalItems} ${t('productsCountUnit')}</span>
+                <span class="font-extrabold text-plum">${appState.deliveryMethod === 'pickup' ? t('deliveryPickup') : loc(areaObj.name)}</span>
+              </div>
+              <div class="text-end">
+                <span class="text-ink/60 block">${t('total')}</span>
+                <span class="text-base font-black text-magenta">${total} ${t('currency')}</span>
+              </div>
+            </div>
+
+            <div id="checkoutErrBox" class="hidden p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold"></div>
+
+            <div>
+              <label class="block text-xs font-bold text-ink mb-1.5">${t('fullName')} *</label>
+              <input type="text" id="chkName" placeholder="${t('fullNamePh')}" class="w-full rounded-xl border border-plum/20 bg-canvas px-4 py-3 text-sm outline-none focus:border-magenta" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-ink mb-1.5">${t('phone')} *</label>
+              <input type="tel" id="chkPhone" dir="ltr" placeholder="${t('phonePh')}" class="w-full rounded-xl border border-plum/20 bg-canvas px-4 py-3 text-sm outline-none focus:border-magenta" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-ink mb-1.5">${t('address')} ${appState.deliveryMethod === 'delivery' ? '*' : ''}</label>
+              <textarea id="chkAddress" rows="3" placeholder="${appState.deliveryMethod === 'pickup' ? t('pickupNotesPh') : t('addressPh')}" class="w-full rounded-xl border border-plum/20 bg-canvas px-4 py-2.5 text-sm outline-none focus:border-magenta resize-none"></textarea>
+            </div>
+
+            <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center gap-2.5 text-xs font-extrabold text-emerald-800">
+              <i data-lucide="banknote" class="w-4 h-4 shrink-0"></i>
+              <span>${t('codTitle')}</span>
+            </div>
+
+            <button type="submit" class="w-full py-3.5 rounded-2xl bg-gradient-to-l from-plum to-magenta text-white font-extrabold text-sm shadow-glow hover:opacity-95 transition-all flex items-center justify-center gap-2">
+              <i data-lucide="check-check" class="w-5 h-5"></i>
+              <span>${t('confirmOrderBtn')}</span>
+            </button>
+          </form>
+        `;
+      } else {
+        // Default Cart Step
+        const remainingForFree = Math.max(0, 1000 - subtotal);
+        bodyHTML = `
+          <div class="space-y-4">
+            <!-- Free Shipping Progress Banner -->
+            <div class="p-3 rounded-2xl text-xs font-bold ${
+              qualifiesFreeShipping ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-lavender-soft text-plum border border-plum/10'
+            }">
+              ${qualifiesFreeShipping
+                ? t('freeShipUnlocked')
+                : `${t('freeShipProgress')} <span class="font-black text-magenta">${remainingForFree} ${t('currency')}</span> ${t('freeShipProgressEnd')}`
+              }
+            </div>
+
+            <!-- Items List -->
+            <div class="space-y-2.5">
+              ${appState.cart.map((item, idx) => {
+                const p = appState.products.find(x => x.id === item.productId);
+                if (!p) return '';
+                const v = p.variants[item.variantIndex] || p.variants[0];
+                return `
+                  <div class="flex items-center gap-3 p-3 rounded-2xl bg-canvas border border-plum/10">
+                    <div class="w-14 h-14 rounded-xl bg-white flex items-center justify-center shrink-0 border border-plum/5 overflow-hidden">
+                      <div class="scale-[0.46]">${getProductSVG(p.svgType, v.color || '#D22F7C')}</div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <h4 class="font-extrabold text-xs text-ink truncate">${loc(p.name)}</h4>
+                      <p class="text-[11px] font-bold text-plum">${loc(v.label)}</p>
+                      <div class="flex items-center justify-between mt-1.5">
+                        <span class="font-black text-sm text-magenta">${v.price * item.qty} ${t('currency')}</span>
+                        <div class="flex items-center gap-1 bg-white rounded-lg border border-plum/15 px-1 py-0.5">
+                          <button onclick="updateCartQty(${idx}, 1)" class="w-5 h-5 flex items-center justify-center text-plum hover:bg-lavender-soft rounded font-bold">+</button>
+                          <span class="text-xs font-extrabold w-4 text-center">${item.qty}</span>
+                          <button onclick="updateCartQty(${idx}, -1)" class="w-5 h-5 flex items-center justify-center text-plum hover:bg-lavender-soft rounded font-bold">-</button>
+                        </div>
+                      </div>
+                    </div>
+                    <button onclick="removeCartItem(${idx})" class="p-1 text-ink/40 hover:text-rose-600 self-start">
+                      <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+
+            <!-- Delivery Options -->
+            <div class="pt-3 border-t border-plum/10 space-y-2.5">
+              <h3 class="text-xs font-extrabold text-ink flex items-center gap-1.5">
+                <i data-lucide="truck" class="w-4 h-4 text-magenta"></i>
+                <span>${t('deliveryTitle')}</span>
+              </h3>
+
+              <label onclick="setDeliveryMethod('delivery')" class="flex items-start gap-3 p-3 rounded-2xl border-2 cursor-pointer transition-all ${
+                appState.deliveryMethod === 'delivery' ? 'border-magenta bg-pink-50/40' : 'border-plum/10 bg-white'
+              }">
+                <input type="radio" name="cartDeliv" ${appState.deliveryMethod === 'delivery' ? 'checked' : ''} class="mt-1 accent-magenta w-4 h-4" />
+                <div class="flex-1">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-xs sm:text-sm text-ink">${t('deliveryHome')}</span>
+                    <span class="text-[11px] font-extrabold px-2 py-0.5 rounded-lg ${
+                      qualifiesFreeShipping ? 'bg-emerald-50 text-emerald-700' : 'bg-lavender-soft text-plum'
+                    }">${qualifiesFreeShipping ? t('freeLabel') : `${areaObj.fee} ${t('currency')}`}</span>
+                  </div>
+                  <p class="text-[11px] text-ink/55 mt-0.5">${t('deliveryHomeDesc')}</p>
+                  ${appState.deliveryMethod === 'delivery' ? `
+                    <select onchange="setDeliveryArea(this.value)" onclick="event.stopPropagation()" class="mt-2 w-full text-xs font-bold bg-canvas border border-plum/20 rounded-xl px-3 py-2 text-ink outline-none focus:border-magenta">
+                      ${DELIVERY_AREAS.map(a => `
+                        <option value="${a.id}" ${a.id === appState.deliveryAreaId ? 'selected' : ''}>${t(a.labelKey)}</option>
+                      `).join('')}
+                    </select>
+                  ` : ''}
+                </div>
+              </label>
+
+              <label onclick="setDeliveryMethod('pickup')" class="flex items-start gap-3 p-3 rounded-2xl border-2 cursor-pointer transition-all ${
+                appState.deliveryMethod === 'pickup' ? 'border-emerald-500 bg-emerald-50/40' : 'border-plum/10 bg-white'
+              }">
+                <input type="radio" name="cartDeliv" ${appState.deliveryMethod === 'pickup' ? 'checked' : ''} class="mt-1 accent-emerald-600 w-4 h-4" />
+                <div class="flex-1">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-xs sm:text-sm text-ink">${t('deliveryPickup')}</span>
+                    <span class="text-[11px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-lg">0 ${t('currency')}</span>
+                  </div>
+                  <p class="text-[11px] text-ink/55 mt-0.5">${t('deliveryPickupDesc')}</p>
+                </div>
+              </label>
+
+              <!-- COD Info Box -->
+              <div class="p-3 rounded-2xl bg-emerald-50/90 border border-emerald-200 flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                  <i data-lucide="banknote" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <p class="text-xs font-extrabold text-emerald-900">${t('codTitle')}</p>
+                  <p class="text-[11px] text-emerald-800/80">${t('codDesc')}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        footerHTML = `
+          <div class="p-5 border-t border-plum/10 bg-canvas space-y-3">
+            <div class="space-y-1.5 text-sm">
+              <div class="flex justify-between text-ink/70">
+                <span>${t('subtotal')}</span>
+                <span class="font-bold text-ink">${subtotal} ${t('currency')}</span>
+              </div>
+              <div class="flex justify-between text-ink/70">
+                <span>${t('deliveryFee')}</span>
+                <span class="font-bold ${deliveryFee === 0 ? 'text-emerald-700' : 'text-ink'}">${deliveryFee === 0 ? t('freeLabel') : `${deliveryFee} ${t('currency')}`}</span>
+              </div>
+              <div class="flex justify-between text-base font-black text-plum pt-2 border-t border-plum/10">
+                <span>${t('total')}</span>
+                <span>${total} ${t('currency')}</span>
+              </div>
+            </div>
+            <button
+              onclick="setCartStep('checkout')"
+              class="w-full py-3.5 rounded-2xl bg-gradient-to-l from-plum to-magenta text-white font-extrabold text-sm shadow-glow hover:opacity-95 transition-all flex items-center justify-center gap-2"
+            >
+              <span>${t('proceedCheckout')}</span>
+              <i data-lucide="${appState.lang === 'ar' ? 'arrow-left' : 'arrow-right'}" class="w-4 h-4"></i>
+            </button>
+          </div>
+        `;
+      }
+
+      panel.innerHTML = `
+        <div class="flex items-center justify-between px-5 py-4 border-b border-plum/10 bg-canvas">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl bg-plum text-white flex items-center justify-center">
+              <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h2 class="font-extrabold text-base text-ink">${appState.cartStep === 'checkout' ? t('checkoutTitle') : t('cartTitle')}</h2>
+              <p class="text-xs text-ink/60">${totalItems} ${t('productsCountUnit')}</p>
+            </div>
+          </div>
+          <button onclick="toggleCartDrawer(false)" class="p-2 rounded-xl hover:bg-plum/10 text-ink/70">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-5">
+          ${bodyHTML}
+        </div>
+
+        ${footerHTML}
+      `;
+
+      lucide.createIcons();
+    }
+
+    function submitDrawerOrder(e) {
+      e.preventDefault();
+      const name = document.getElementById('chkName').value.trim();
+      const phone = document.getElementById('chkPhone').value.trim();
+      const address = document.getElementById('chkAddress').value.trim();
+      const errBox = document.getElementById('checkoutErrBox');
+
+      if (name.length < 3) {
+        errBox.textContent = t('errName');
+        errBox.classList.remove('hidden');
+        return;
+      }
+      if (phone.length < 10) {
+        errBox.textContent = t('errPhone');
+        errBox.classList.remove('hidden');
+        return;
+      }
+      if (appState.deliveryMethod === 'delivery' && address.length < 5) {
+        errBox.textContent = t('errAddress');
+        errBox.classList.remove('hidden');
+        return;
+      }
+
+      errBox.classList.add('hidden');
+      appState.lastOrderNumber += 1;
+      const orderId = `#QWR-${appState.lastOrderNumber}`;
+      const { total, areaObj } = getCartSummary();
+
+      const itemsSummary = appState.cart.map(item => {
+        const p = appState.products.find(x => x.id === item.productId);
+        const v = p.variants[item.variantIndex] || p.variants[0];
+        return `${loc(p.name)} (${loc(v.label)}) ×${item.qty}`;
+      }).join('، ');
+
+      const newOrder = {
+        id: orderId,
+        customerName: name,
+        phone,
+        deliveryMethod: appState.deliveryMethod,
+        deliveryArea: appState.deliveryMethod === 'pickup'
+          ? { ar: 'استلام مجاني من الفرع', en: 'Free Store Pickup' }
+          : areaObj.name,
+        address: address || (appState.lang === 'ar' ? 'استلام مباشر من الفرع' : 'Direct branch pickup'),
+        itemsSummary,
+        total,
+        status: 'new',
+        createdAt: new Date().toLocaleString(appState.lang === 'ar' ? 'ar-EG' : 'en-US', {
+          month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+        })
+      };
+
+      appState.orders.unshift(newOrder);
+      appState.lastOrder = newOrder;
+      appState.cart = [];
+      appState.cartStep = 'success';
+      persistState();
+      renderHeaderAndChrome();
+      renderCartDrawer();
+    }
+
+    function copyOrderId(orderId) {
+      try {
+        const inp = document.createElement('input');
+        inp.value = orderId;
+        document.body.appendChild(inp);
+        inp.select();
+        document.execCommand('copy');
+        document.body.removeChild(inp);
+        showToast(`${t('copiedToast')}: ${orderId}`);
+      } catch (e) {}
+    }
+
+    /**
+     * =========================================================================
+     * 11. FULL-PAGE ADMIN PANEL (4 BILINGUAL SECTIONS)
+     * =========================================================================
+     */
+    function toggleAdminMobileSidebar(open) {
+      const sidebar = document.getElementById('adminSidebar');
+      const backdrop = document.getElementById('adminMobileBackdrop');
+      if (open) {
+        sidebar.classList.remove('sidebar-closed');
+        backdrop.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('sidebar-closed');
+        backdrop.classList.add('hidden');
+      }
+    }
+
+    function setAdminTab(tab) {
+      appState.adminTab = tab;
+      toggleAdminMobileSidebar(false);
+      renderAdminPanel();
+    }
+
+    function renderAdminPanel() {
+      const newOrdersCount = appState.orders.filter(o => o.status === 'new').length;
+
+      // Render Persistent Sidebar
+      const sidebar = document.getElementById('adminSidebar');
+      const navItems = [
+        { id: 'dashboard', icon: 'layout-dashboard', label: t('adminTabDashboard') },
+        { id: 'orders', icon: 'shopping-bag', label: t('adminTabOrders'), badge: newOrdersCount, badgeCls: 'bg-magenta text-white' },
+        { id: 'products', icon: 'package', label: t('adminTabProducts'), badge: appState.products.length, badgeCls: 'bg-white/15 text-white' },
+        { id: 'categories', icon: 'folder-tree', label: t('adminTabCategories') }
+      ];
+
+      sidebar.innerHTML = `
+        <div class="p-5 border-b border-white/10 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 shrink-0">${getQwareerLogoSVG('qLogoAdminSide')}</div>
+            <div>
+              <h2 class="font-black text-base text-white">${t('adminBrand')}</h2>
+              <span class="text-[11px] text-pink-300 font-bold">${t('adminRole')}</span>
+            </div>
+          </div>
+          <button onclick="toggleAdminMobileSidebar(false)" class="lg:hidden p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <nav class="flex-1 p-4 space-y-1.5 overflow-y-auto">
+          <p class="px-3 text-[11px] font-bold text-white/40 uppercase tracking-wider mb-2">${t('adminMenuTitle')}</p>
+          ${navItems.map(item => {
+            const active = appState.adminTab === item.id;
+            return `
+              <button
+                onclick="setAdminTab('${item.id}')"
+                class="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm transition-all ${
+                  active
+                    ? 'bg-gradient-to-l from-plum to-magenta text-white font-extrabold shadow-glow'
+                    : 'text-white/75 hover:bg-white/10 hover:text-white font-bold'
+                }"
+              >
+                <span class="flex items-center gap-3">
+                  <i data-lucide="${item.icon}" class="w-5 h-5"></i>
+                  <span>${item.label}</span>
+                </span>
+                ${item.badge !== undefined ? `<span class="px-2 py-0.5 rounded-full text-[11px] font-extrabold ${item.badgeCls}">${item.badge}</span>` : ''}
+              </button>
+            `;
+          }).join('')}
+        </nav>
+
+        <div class="p-4 border-t border-white/10 space-y-2">
+          <button onclick="navigateTo('home')" class="w-full py-3 px-4 rounded-xl bg-gradient-to-l from-plum to-magenta hover:opacity-95 text-white font-extrabold text-sm shadow-glow flex items-center justify-center gap-2">
+            <i data-lucide="store" class="w-4 h-4"></i>
+            <span>${t('backToStore')}</span>
+          </button>
+          <button onclick="resetDemoData()" class="w-full py-2 px-3 rounded-xl bg-white/5 hover:bg-white/10 text-white/65 hover:text-white text-xs font-bold flex items-center justify-center gap-1.5">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+            <span>${t('resetDemo')}</span>
+          </button>
+        </div>
+      `;
+
+      // Top bar titles & active section content
+      const titleEl = document.getElementById('adminTopTitle');
+      const subEl = document.getElementById('adminTopSubtitle');
+      const mainEl = document.getElementById('adminMainContent');
+
+      if (appState.adminTab === 'dashboard') {
+        titleEl.textContent = t('adminTabDashboard');
+        subEl.textContent = t('adminSubDashboard');
+        mainEl.innerHTML = buildAdminDashboardHTML();
+      } else if (appState.adminTab === 'orders') {
+        titleEl.textContent = t('adminTabOrders');
+        subEl.textContent = t('adminSubOrders');
+        mainEl.innerHTML = buildAdminOrdersHTML();
+      } else if (appState.adminTab === 'products') {
+        titleEl.textContent = t('adminTabProducts');
+        subEl.textContent = t('adminSubProducts');
+        mainEl.innerHTML = buildAdminProductsHTML();
+        populateAdminSubCatSelect();
+      } else if (appState.adminTab === 'categories') {
+        titleEl.textContent = t('adminTabCategories');
+        subEl.textContent = t('adminSubCategories');
+        mainEl.innerHTML = buildAdminCategoriesHTML();
+      }
+
+      lucide.createIcons();
+    }
+
+    function buildAdminDashboardHTML() {
+      const totalSales = appState.orders.filter(o => o.status !== 'cancelled').reduce((s, o) => s + o.total, 0);
+      const newOrders = appState.orders.filter(o => o.status === 'new').length;
+      const totalProducts = appState.products.length;
+      const totalSubs = appState.categories.reduce((acc, c) => acc + c.subCategories.length, 0);
+
+      return `
+        <div class="space-y-6 animate-pop">
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+            <div class="bg-white p-5 rounded-2xl border border-plum/10 shadow-card flex items-center gap-4">
+              <div class="w-12 h-12 rounded-2xl bg-pink-50 text-magenta flex items-center justify-center shrink-0"><i data-lucide="coins" class="w-6 h-6"></i></div>
+              <div>
+                <p class="text-xs font-bold text-ink/60">${t('kpiSales')}</p>
+                <p class="text-2xl font-black text-plum mt-0.5">${totalSales.toLocaleString('en-US')} <span class="text-xs font-bold">${t('currency')}</span></p>
+              </div>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-plum/10 shadow-card flex items-center gap-4">
+              <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0"><i data-lucide="bell-ring" class="w-6 h-6"></i></div>
+              <div>
+                <p class="text-xs font-bold text-ink/60">${t('kpiNewOrders')}</p>
+                <p class="text-2xl font-black text-amber-600 mt-0.5">${newOrders}</p>
+              </div>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-plum/10 shadow-card flex items-center gap-4">
+              <div class="w-12 h-12 rounded-2xl bg-lavender-soft text-plum flex items-center justify-center shrink-0"><i data-lucide="package" class="w-6 h-6"></i></div>
+              <div>
+                <p class="text-xs font-bold text-ink/60">${t('kpiProducts')}</p>
+                <p class="text-2xl font-black text-ink mt-0.5">${totalProducts}</p>
+              </div>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-plum/10 shadow-card flex items-center gap-4">
+              <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0"><i data-lucide="folder-tree" class="w-6 h-6"></i></div>
+              <div>
+                <p class="text-xs font-bold text-ink/60">${t('kpiSubCats')}</p>
+                <p class="text-2xl font-black text-emerald-700 mt-0.5">${totalSubs}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-8 bg-white rounded-3xl border border-plum/10 shadow-card overflow-hidden">
+              <div class="px-6 py-4 border-b border-plum/10 flex items-center justify-between">
+                <h3 class="font-extrabold text-base text-ink">${t('recentOrdersTitle')}</h3>
+                <button onclick="setAdminTab('orders')" class="text-xs font-extrabold text-plum hover:text-magenta">${t('viewAllOrders')}</button>
+              </div>
+              <div class="divide-y divide-plum/10">
+                ${appState.orders.slice(0, 5).map(ord => `
+                  <div class="p-4 sm:px-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:bg-canvas/70">
+                    <div>
+                      <div class="flex items-center gap-2">
+                        <span class="font-black text-sm text-plum">${ord.id}</span>
+                        <span class="font-bold text-sm text-ink">${ord.customerName}</span>
+                        <span class="px-2 py-0.5 rounded-lg text-[10px] font-extrabold border ${STATUS_STYLES[ord.status] || STATUS_STYLES.new}">${t('st_' + ord.status)}</span>
+                      </div>
+                      <p class="text-xs text-ink/60 mt-1 line-clamp-1">${ord.itemsSummary}</p>
+                    </div>
+                    <div class="flex sm:flex-col items-center sm:items-end justify-between shrink-0">
+                      <span class="font-black text-sm text-magenta">${ord.total} ${t('currency')}</span>
+                      <span class="text-[11px] text-ink/50">${ord.createdAt}</span>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <div class="lg:col-span-4 bg-white rounded-3xl border border-plum/10 shadow-card p-6 space-y-4">
+              <div class="flex items-center justify-between">
+                <h3 class="font-extrabold text-base text-ink">${t('categoriesDistTitle')}</h3>
+                <button onclick="setAdminTab('categories')" class="text-xs font-bold text-magenta hover:underline">${t('manageLink')}</button>
+              </div>
+              <div class="space-y-3">
+                ${appState.categories.map(cat => {
+                  const cnt = appState.products.filter(p => p.categoryId === cat.id).length;
+                  return `
+                    <div class="p-3.5 rounded-2xl bg-canvas border border-plum/10">
+                      <div class="flex items-center justify-between mb-2">
+                        <span class="font-extrabold text-sm text-plum">${loc(cat.name)}</span>
+                        <span class="px-2 py-0.5 rounded-lg bg-white text-xs font-extrabold text-ink border border-plum/10">${cnt} ${t('productsCountUnit')}</span>
+                      </div>
+                      <div class="flex flex-wrap gap-1.5">
+                        ${cat.subCategories.map(s => `<span class="px-2 py-0.5 rounded-md bg-lavender-soft text-[11px] font-bold text-plum">${loc(s.name)}</span>`).join('')}
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function buildAdminOrdersHTML() {
+      const list = appState.adminOrderFilter === 'all'
+        ? appState.orders
+        : appState.orders.filter(o => o.status === appState.adminOrderFilter);
+
+      return `
+        <div class="space-y-5 animate-pop">
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="setAdminOrderFilter('all')" class="px-4 py-2 rounded-xl text-xs font-extrabold border transition-all ${
+              appState.adminOrderFilter === 'all' ? 'bg-plum text-white border-plum' : 'bg-white text-ink/75 border-plum/15 hover:border-plum'
+            }">${t('st_all')} (${appState.orders.length})</button>
+
+            ${STATUS_KEYS.map(key => {
+              const cnt = appState.orders.filter(o => o.status === key).length;
+              const active = appState.adminOrderFilter === key;
+              return `
+                <button onclick="setAdminOrderFilter('${key}')" class="px-4 py-2 rounded-xl text-xs font-extrabold border transition-all ${
+                  active ? 'bg-magenta text-white border-magenta' : 'bg-white text-ink/75 border-plum/15 hover:border-magenta'
+                }">${t('st_' + key)} (${cnt})</button>
+              `;
+            }).join('')}
+          </div>
+
+          <div class="bg-white rounded-3xl border border-plum/10 shadow-card overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-start border-collapse min-w-[780px]">
+                <thead>
+                  <tr class="bg-canvas text-ink/70 text-xs font-extrabold border-b border-plum/10">
+                    <th class="py-3.5 px-4 text-start">${t('thOrderId')}</th>
+                    <th class="py-3.5 px-4 text-start">${t('thCustomer')}</th>
+                    <th class="py-3.5 px-4 text-start">${t('thItems')}</th>
+                    <th class="py-3.5 px-4 text-start">${t('thDelivery')}</th>
+                    <th class="py-3.5 px-4 text-start">${t('thTotal')}</th>
+                    <th class="py-3.5 px-4 text-start">${t('thStatus')}</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-plum/10 text-sm">
+                  ${list.length === 0 ? `
+                    <tr><td colspan="6" class="py-12 text-center text-ink/55 font-bold">${t('noOrdersFilter')}</td></tr>
+                  ` : list.map(ord => `
+                    <tr class="hover:bg-canvas/60 align-top">
+                      <td class="py-4 px-4 whitespace-nowrap">
+                        <span class="font-black text-plum block">${ord.id}</span>
+                        <span class="text-[11px] text-ink/50">${ord.createdAt}</span>
+                      </td>
+                      <td class="py-4 px-4">
+                        <p class="font-extrabold text-ink">${ord.customerName}</p>
+                        <p class="text-xs text-ink/60 font-bold" dir="ltr">${ord.phone}</p>
+                      </td>
+                      <td class="py-4 px-4 max-w-xs">
+                        <p class="text-xs text-ink/85 font-semibold leading-relaxed">${ord.itemsSummary}</p>
+                      </td>
+                      <td class="py-4 px-4">
+                        <span class="inline-block px-2.5 py-0.5 rounded-lg text-[11px] font-extrabold ${
+                          ord.deliveryMethod === 'pickup' ? 'bg-emerald-50 text-emerald-700' : 'bg-lavender-soft text-plum'
+                        }">${loc(ord.deliveryArea)}</span>
+                        <p class="text-[11px] text-ink/60 mt-1 max-w-[200px]">${ord.address}</p>
+                      </td>
+                      <td class="py-4 px-4 whitespace-nowrap">
+                        <span class="font-black text-magenta text-base">${ord.total} ${t('currency')}</span>
+                        <span class="block mt-0.5 text-[10px] font-extrabold text-emerald-700">COD</span>
+                      </td>
+                      <td class="py-4 px-4 whitespace-nowrap">
+                        <select onchange="updateOrderStatus('${ord.id}', this.value)" class="text-xs font-extrabold rounded-xl border px-3 py-2 outline-none cursor-pointer ${STATUS_STYLES[ord.status] || STATUS_STYLES.new}">
+                          ${STATUS_KEYS.map(k => `<option value="${k}" ${k === ord.status ? 'selected' : ''} class="bg-white text-ink font-bold">${t('st_' + k)}</option>`).join('')}
+                        </select>
+                      </td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function setAdminOrderFilter(val) {
+      appState.adminOrderFilter = val;
+      renderAdminPanel();
+    }
+
+    function updateOrderStatus(orderId, newStatus) {
+      const target = appState.orders.find(o => o.id === orderId);
+      if (!target) return;
+      target.status = newStatus;
+      persistState();
+      renderAdminPanel();
+      showToast(`${t('statusUpdatedToast')} (${orderId})`);
+    }
+
+    function buildAdminProductsHTML() {
+      return `
+        <div class="space-y-6 animate-pop">
+          <!-- Bilingual Add Product Form -->
+          <div class="bg-white rounded-3xl border border-plum/10 shadow-card p-5 sm:p-6">
+            <h3 class="font-extrabold text-base text-ink flex items-center gap-2 mb-4">
+              <span class="w-8 h-8 rounded-xl bg-magenta text-white flex items-center justify-center"><i data-lucide="plus" class="w-4 h-4"></i></span>
+              <span>${t('addProductTitle')}</span>
+            </h3>
+
+            <form onsubmit="handleAdminAddProduct(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-ink mb-1.5">${t('prodNameAr')} *</label>
+                <input type="text" id="admProdAr" required placeholder="مثال: روج سائل مات" class="w-full rounded-xl border border-plum/20 bg-canvas px-3.5 py-2.5 text-sm outline-none focus:border-magenta" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-ink mb-1.5">${t('prodNameEn')} *</label>
+                <input type="text" id="admProdEn" required placeholder="e.g. Matte Liquid Lipstick" class="w-full rounded-xl border border-plum/20 bg-canvas px-3.5 py-2.5 text-sm outline-none focus:border-magenta" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-ink mb-1.5">${t('priceEgp')} *</label>
+                <input type="number" id="admProdPrice" required min="10" placeholder="320" class="w-full rounded-xl border border-plum/20 bg-canvas px-3.5 py-2.5 text-sm outline-none focus:border-magenta" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-ink mb-1.5">${t('mainCategory')} *</label>
+                <select id="admProdMainCat" onchange="populateAdminSubCatSelect()" class="w-full rounded-xl border border-plum/20 bg-canvas px-3.5 py-2.5 text-sm font-bold outline-none focus:border-magenta">
+                  ${appState.categories.map(c => `<option value="${c.id}">${loc(c.name)}</option>`).join('')}
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-ink mb-1.5">${t('subCategory')} *</label>
+                <select id="admProdSubCat" class="w-full rounded-xl border border-plum/20 bg-canvas px-3.5 py-2.5 text-sm font-bold outline-none focus:border-magenta"></select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-ink mb-1.5">${t('variantTypeLabel')}</label>
+                <select id="admProdVarType" class="w-full rounded-xl border border-plum/20 bg-canvas px-3.5 py-2.5 text-sm font-bold outline-none focus:border-magenta">
+                  <option value="pill">${t('variantSizeOpt')}</option>
+                  <option value="swatch">${t('variantShadeOpt')}</option>
+                </select>
+              </div>
+              <div class="sm:col-span-2">
+                <label class="block text-xs font-bold text-ink mb-1.5">${t('variantValuesLabel')}</label>
+                <input type="text" id="admProdVarVals" placeholder="50ml, 100ml  OR  Rose, Nude, Plum" class="w-full rounded-xl border border-plum/20 bg-canvas px-3.5 py-2.5 text-sm outline-none focus:border-magenta" />
+              </div>
+              <div class="flex items-end">
+                <button type="submit" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-l from-plum to-magenta text-white font-extrabold text-sm shadow-glow hover:opacity-95 flex items-center justify-center gap-2">
+                  <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                  <span>${t('saveProductBtn')}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Products Table -->
+          <div class="bg-white rounded-3xl border border-plum/10 shadow-card overflow-hidden">
+            <div class="px-6 py-4 border-b border-plum/10">
+              <h3 class="font-extrabold text-base text-ink">${t('productsListTitle')} (${appState.products.length})</h3>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-start border-collapse min-w-[680px]">
+                <thead>
+                  <tr class="bg-canvas text-ink/70 text-xs font-extrabold border-b border-plum/10">
+                    <th class="py-3.5 px-4 text-start">${t('thProduct')}</th>
+                    <th class="py-3.5 px-4 text-start">${t('thCatHierarchy')}</th>
+                    <th class="py-3.5 px-4 text-start">${t('thPrice')}</th>
+                    <th class="py-3.5 px-4 text-start">${t('thVariants')}</th>
+                    <th class="py-3.5 px-4 text-center">${t('thAction')}</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-plum/10 text-sm">
+                  ${appState.products.map(p => {
+                    const mc = getCategory(p.categoryId);
+                    const sc = getSubCategory(p.categoryId, p.subCategoryId);
+                    return `
+                      <tr class="hover:bg-canvas/60">
+                        <td class="py-3.5 px-4">
+                          <div class="flex items-center gap-3">
+                            <div class="w-11 h-11 rounded-xl bg-canvas border border-plum/10 flex items-center justify-center shrink-0 overflow-hidden">
+                              <div class="scale-[0.38]">${getProductSVG(p.svgType, p.variants[0]?.color || '#D22F7C')}</div>
+                            </div>
+                            <div>
+                              <p class="font-extrabold text-ink text-xs sm:text-sm">${loc(p.name)}</p>
+                              <p class="text-[11px] text-ink/50">${appState.lang === 'ar' ? p.name.en : p.name.ar}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="py-3.5 px-4 whitespace-nowrap">
+                          <span class="px-2.5 py-1 rounded-lg bg-lavender-soft text-plum text-xs font-extrabold">${loc(mc?.name)}</span>
+                          <span class="text-ink/40 mx-1">›</span>
+                          <span class="px-2.5 py-1 rounded-lg bg-pink-50 text-magenta text-xs font-extrabold">${loc(sc?.name)}</span>
+                        </td>
+                        <td class="py-3.5 px-4 font-black text-plum whitespace-nowrap">${p.variants[0].price} ${t('currency')}</td>
+                        <td class="py-3.5 px-4 text-xs text-ink/70 font-semibold">${p.variants.map(v => loc(v.label)).join(' • ')}</td>
+                        <td class="py-3.5 px-4 text-center">
+                          <button onclick="deleteAdminProduct('${p.id}')" class="p-2 rounded-xl text-rose-600 hover:bg-rose-50 transition-colors">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    `;
+                  }).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function populateAdminSubCatSelect() {
+      const mSel = document.getElementById('admProdMainCat');
+      const sSel = document.getElementById('admProdSubCat');
+      if (!mSel || !sSel) return;
+      const cat = getCategory(mSel.value);
+      if (!cat) return;
+      sSel.innerHTML = cat.subCategories.map(s => `<option value="${s.id}">${loc(s.name)}</option>`).join('');
+    }
+
+    function handleAdminAddProduct(e) {
+      e.preventDefault();
+      const nameAr = document.getElementById('admProdAr').value.trim();
+      const nameEn = document.getElementById('admProdEn').value.trim();
+      const categoryId = document.getElementById('admProdMainCat').value;
+      const subCategoryId = document.getElementById('admProdSubCat').value;
+      const price = parseInt(document.getElementById('admProdPrice').value, 10) || 250;
+      const variantType = document.getElementById('admProdVarType').value;
+      const rawVars = document.getElementById('admProdVarVals').value.trim();
+
+      if (!nameAr || !nameEn || !categoryId || !subCategoryId) return;
+
+      const palette = ['#B85A7C', '#D22F7C', '#6E2468', '#DFB18E', '#C01E3A'];
+      const parsedVars = rawVars
+        ? rawVars.split(',').map(s => s.trim()).filter(Boolean)
+        : (variantType === 'swatch' ? ['Rose', 'Nude'] : ['50 ml', '100 ml']);
+
+      const variants = parsedVars.map((lbl, idx) => ({
+        label: { ar: lbl, en: lbl },
+        color: variantType === 'swatch' ? palette[idx % palette.length] : undefined,
+        price: variantType === 'pill' && idx > 0 ? Math.round(price * (1 + idx * 0.4)) : price
+      }));
+
+      const svgMap = { makeup: 'lipstick', perfumes: 'perfume_floral', skincare: 'serum' };
+
+      appState.products.unshift({
+        id: 'p-' + Date.now(),
+        name: { ar: nameAr, en: nameEn },
+        description: {
+          ar: 'منتج أصلي جديد من تشكيلة قوارير المختارة بعناية.',
+          en: 'Brand new authentic arrival from the Qwareer curated collection.'
+        },
+        badge: { ar: 'جديد', en: 'New' },
+        categoryId,
+        subCategoryId,
+        featured: true,
+        salesCount: 60,
+        svgType: svgMap[categoryId] || 'cream',
+        variantType,
+        variants
+      });
+
+      persistState();
+      renderAdminPanel();
+      showToast(t('productAddedToast'));
+    }
+
+    function deleteAdminProduct(productId) {
+      appState.products = appState.products.filter(p => p.id !== productId);
+      appState.cart = appState.cart.filter(item => item.productId !== productId);
+      persistState();
+      renderAdminPanel();
+      showToast(t('productDeletedToast'));
+    }
+
+    function buildAdminCategoriesHTML() {
+      return `
+        <div class="space-y-6 animate-pop">
+          <!-- Add Bilingual Sub-Category Form -->
+          <div class="bg-white rounded-3xl border border-plum/10 shadow-card p-5 sm:p-6">
+            <h3 class="font-extrabold text-base text-ink flex items-center gap-2 mb-4">
+              <span class="w-8 h-8 rounded-xl bg-plum text-white flex items-center justify-center"><i data-lucide="folder-plus" class="w-4 h-4"></i></span>
+              <span>${t('addSubCatTitle')}</span>
+            </h3>
+
+            <form onsubmit="handleAdminAddSubCat(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+              <div>
+                <label class="block text-xs font-bold text-ink mb-1.5">${t('mainCategory')} *</label>
+                <select id="admSubParent" class="w-full rounded-xl border border-plum/20 bg-canvas px-3.5 py-2.5 text-sm font-bold outline-none focus:border-magenta">
+                  ${appState.categories.map(c => `<option value="${c.id}">${loc(c.name)}</option>`).join('')}
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-ink mb-1.5">${t('subNameAr')} *</label>
+                <input type="text" id="admSubAr" required placeholder="مثال: فرش وأدوات ميكب" class="w-full rounded-xl border border-plum/20 bg-canvas px-3.5 py-2.5 text-sm outline-none focus:border-magenta" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-ink mb-1.5">${t('subNameEn')} *</label>
+                <input type="text" id="admSubEn" required placeholder="e.g. Brushes & Tools" class="w-full rounded-xl border border-plum/20 bg-canvas px-3.5 py-2.5 text-sm outline-none focus:border-magenta" />
+              </div>
+              <button type="submit" class="py-2.5 px-4 rounded-xl bg-gradient-to-l from-plum to-magenta text-white font-extrabold text-sm shadow-glow hover:opacity-95 flex items-center justify-center gap-2">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                <span>${t('addSubCatBtn')}</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- Visual Nested Tree -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            ${appState.categories.map(cat => {
+              const totalCnt = appState.products.filter(p => p.categoryId === cat.id).length;
+              return `
+                <div class="bg-white rounded-3xl border border-plum/10 shadow-card overflow-hidden flex flex-col">
+                  <div class="p-5 bg-gradient-to-l ${cat.gradient || 'from-plum to-magenta'} text-white flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                      <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+                        <i data-lucide="${cat.icon || 'folder'}" class="w-5 h-5"></i>
+                      </div>
+                      <div>
+                        <h4 class="font-black text-base">${loc(cat.name)}</h4>
+                        <p class="text-[11px] text-white/80">${cat.subCategories.length} ${t('subCategoriesCount')}</p>
+                      </div>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-xl bg-white/20 text-xs font-extrabold">${totalCnt} ${t('productsCountUnit')}</span>
+                  </div>
+                  <div class="p-4 flex-1 space-y-2.5">
+                    ${cat.subCategories.map(sub => {
+                      const subCnt = appState.products.filter(p => p.categoryId === cat.id && p.subCategoryId === sub.id).length;
+                      return `
+                        <div class="flex items-center justify-between p-3 rounded-2xl bg-canvas border border-plum/10">
+                          <div>
+                            <p class="font-bold text-sm text-ink">${loc(sub.name)}</p>
+                            <p class="text-[11px] text-ink/50">${appState.lang === 'ar' ? sub.name.en : sub.name.ar}</p>
+                          </div>
+                          <span class="px-2.5 py-0.5 rounded-lg bg-white border border-plum/10 text-xs font-extrabold text-plum">${subCnt}</span>
+                        </div>
+                      `;
+                    }).join('')}
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function handleAdminAddSubCat(e) {
+      e.preventDefault();
+      const parentId = document.getElementById('admSubParent').value;
+      const ar = document.getElementById('admSubAr').value.trim();
+      const en = document.getElementById('admSubEn').value.trim();
+      if (!parentId || !ar || !en) return;
+
+      const parent = getCategory(parentId);
+      if (!parent) return;
+      parent.subCategories.push({
+        id: 'sub-' + Date.now(),
+        name: { ar, en }
+      });
+
+      persistState();
+      renderAdminPanel();
+      showToast(t('subCatAddedToast'));
+    }
+
+    /**
+     * =========================================================================
+     * 12. MASTER RENDERER, TOASTS & BOOTSTRAP
+     * =========================================================================
+     */
+    function showToast(message) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'animate-toast pointer-events-auto flex items-center gap-2.5 bg-ink text-white px-4 py-3 rounded-2xl shadow-xl border border-white/10 text-xs sm:text-sm font-bold max-w-xs sm:max-w-sm';
+      toast.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-magenta shrink-0"></span><span>${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(8px)';
+        toast.style.transition = 'all 0.22s ease';
+        setTimeout(() => toast.remove(), 240);
+      }, 2700);
+    }
+
+    function renderApp() {
+      applyLanguageDirection();
+
+      const storeShell = document.getElementById('storefrontShell');
+      const homeEl = document.getElementById('homePageView');
+      const storeEl = document.getElementById('storePageView');
+      const adminEl = document.getElementById('adminPageView');
+
+      if (appState.page === 'admin') {
+        storeShell.classList.add('hidden');
+        adminEl.classList.remove('hidden');
+        renderAdminPanel();
+      } else {
+        adminEl.classList.add('hidden');
+        storeShell.classList.remove('hidden');
+        renderHeaderAndChrome();
+
+        if (appState.page === 'home') {
+          homeEl.classList.remove('hidden');
+          storeEl.classList.add('hidden');
+          renderHomePage();
+        } else {
+          homeEl.classList.add('hidden');
+          storeEl.classList.remove('hidden');
+          renderStorePage();
+        }
+      }
+
+      // If cart drawer is currently open, re-render in new language
+      const cartOverlay = document.getElementById('cartOverlay');
+      if (cartOverlay && !cartOverlay.classList.contains('hidden')) {
+        renderCartDrawer();
+      }
+
+      lucide.createIcons();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('headerLogoSlot').innerHTML = getQwareerLogoSVG('qLogoHeader');
+      renderApp();
+    });
+  </script>
+</body>
+</html>
